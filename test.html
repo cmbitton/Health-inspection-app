@@ -474,7 +474,7 @@
                 }
 
                 if (inspection.printablePath) {
-                    const reportUrl = `https://ri.healthinspections.us/ri/${inspection.printablePath.replace('../', '')}`;
+                    const reportUrl = `https://ri.healthinspections.us/${inspection.printablePath.replace('../', '')}`;
                     html += `<a class="report-link" href="${escHtml(reportUrl)}" target="_blank" rel="noopener">
                         View Official Report →
                     </a>`;

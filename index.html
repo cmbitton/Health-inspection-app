@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RI Health Inspections</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+
+    <header>
+        <div class="logo">🏥</div>
+        <div>
+            <h1>Rhode Island Health Inspections</h1>
+            <p>Tap a pin to view inspection history</p>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <div id="map"></div>
+
+        <div id="sidebar">
+            <div class="sidebar-top">
+                <div class="search-wrap">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"/>
+                    </svg>
+                    <input type="search" id="search-input" placeholder="Search locations or addresses…" autocomplete="off" />
+                </div>
+            </div>
+
+            <div class="sidebar-body" id="sidebar-body">
+                <div class="placeholder">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0L6.343 16.657a8 8 0 1111.314 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    <p>Click a map pin to view inspection history</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/map.js"></script>
+</body>
+</html>
