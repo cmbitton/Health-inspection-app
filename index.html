@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RI Health Inspections</title>
 
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏥</text></svg>">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="css/app.css" />
 </head>
@@ -19,9 +20,16 @@
     </header>
 
     <div class="main-content">
-        <div id="map"></div>
+        <div id="map">
+            <div class="map-legend">
+                <div class="legend-row"><div class="dot" style="background:#22c55e"></div> 0–2 violations</div>
+                <div class="legend-row"><div class="dot" style="background:#f59e0b"></div> 3–4 violations</div>
+                <div class="legend-row"><div class="dot" style="background:#ef4444"></div> 5+ violations</div>
+                <div class="legend-row"><div class="dot" style="background:#94a3b8"></div> No data</div>
+            </div>
+        </div>
 
-        <div id="sidebar">
+        <div id="sidebar" class="collapsed">
             <div class="sidebar-top">
                 <div class="search-wrap">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -30,6 +38,11 @@
                     </svg>
                     <input type="search" id="search-input" placeholder="Search locations or addresses…" autocomplete="off" />
                 </div>
+                <button id="sidebar-toggle" aria-label="Toggle panel">
+                    <svg id="toggle-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
             </div>
 
             <div class="sidebar-body" id="sidebar-body">

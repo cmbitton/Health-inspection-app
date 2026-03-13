@@ -1,0 +1,4 @@
+health-project/
+__pycache__/
+*.pyc
+.env
