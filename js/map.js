@@ -41,6 +41,7 @@ function createMarker(loc) {
     );
 
     marker.on('click', () => {
+        sidebar.classList.remove('collapsed');
         if (activeMarker && activeMarker !== marker) {
             activeMarker.setStyle(markerStyle(activeMarker.locationData));
         }
@@ -92,3 +93,42 @@ searchInput.addEventListener('input', () => {
 });
 
 loadLocations();
+
+// ── Near Me ──────────────────────────────────────────────────────────────────
+
+let userMarker = null;
+
+const nearMeBtn = document.getElementById('near-me-btn');
+
+nearMeBtn.addEventListener('click', () => {
+    if (!navigator.geolocation) {
+        alert('Geolocation is not supported by your browser.');
+        return;
+    }
+
+    nearMeBtn.classList.add('loading');
+
+    navigator.geolocation.getCurrentPosition(
+        ({ coords }) => {
+            nearMeBtn.classList.remove('loading');
+            const { latitude: lat, longitude: lng } = coords;
+
+            map.setView([lat, lng], 14);
+
+            if (userMarker) userMarker.remove();
+            userMarker = L.circleMarker([lat, lng], {
+                radius: 9,
+                fillColor: '#3b82f6',
+                color: 'white',
+                weight: 3,
+                opacity: 1,
+                fillOpacity: 1,
+            }).addTo(map).bindTooltip('You are here', { permanent: false });
+        },
+        () => {
+            nearMeBtn.classList.remove('loading');
+            alert('Could not get your location. Please check your browser permissions.');
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+    );
+});

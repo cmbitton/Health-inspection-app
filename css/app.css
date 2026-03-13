@@ -312,6 +312,39 @@ header p {
     color: #1e293b !important;
 }
 
+/* ── Near Me button ── */
+#near-me-btn {
+    position: absolute;
+    top: 80px;
+    left: 10px;
+    z-index: 1000;
+    width: 34px;
+    height: 34px;
+    background: white;
+    border: 2px solid rgba(0,0,0,0.2);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1e293b;
+    box-shadow: none;
+}
+
+#near-me-btn:hover {
+    background: #f4f4f4;
+}
+
+#near-me-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+#near-me-btn.loading svg {
+    animation: spin 1s linear infinite;
+    opacity: 0.5;
+}
+
 /* ── Legend ── */
 .map-legend {
     position: absolute;

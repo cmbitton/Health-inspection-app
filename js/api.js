@@ -1,7 +1,6 @@
 const PROXY_BASE = '/api-proxy';
 
 async function fetchInspectionData(loc) {
-    document.getElementById('sidebar').classList.remove('collapsed');
     const sidebarBody = document.getElementById('sidebar-body');
     sidebarBody.innerHTML = `
         <div class="loader">
