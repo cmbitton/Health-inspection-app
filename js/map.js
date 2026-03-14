@@ -41,7 +41,7 @@ function createMarker(loc) {
     );
 
     marker.on('click', () => {
-        sidebar.classList.remove('collapsed');
+        setSidebarCollapsed(false);
         if (activeMarker && activeMarker !== marker) {
             activeMarker.setStyle(markerStyle(activeMarker.locationData));
         }
@@ -75,22 +75,101 @@ async function loadLocations() {
 const sidebar = document.getElementById('sidebar');
 const sidebarToggle = document.getElementById('sidebar-toggle');
 
+const mainContent = document.querySelector('.main-content');
+
+function setSidebarCollapsed(collapsed) {
+    sidebar.classList.toggle('collapsed', collapsed);
+    mainContent.classList.toggle('sidebar-collapsed', collapsed);
+    map.invalidateSize();
+}
+
+// Sidebar starts collapsed on mobile
+setSidebarCollapsed(true);
+
 sidebarToggle.addEventListener('click', () => {
-    sidebar.classList.toggle('collapsed');
+    setSidebarCollapsed(!sidebar.classList.contains('collapsed'));
 });
 
-searchInput.addEventListener('input', () => {
+// ── Filters ──────────────────────────────────────────────────────────────────
+
+const activeFilters = {
+    severity: new Set(['clean', 'moderate', 'bad', 'nodata']),
+    recency:  new Set(['recent', 'year', 'old', 'stale']),
+};
+
+const NOW = Date.now();
+
+function severityValue(loc) {
+    const n = loc.violation_count;
+    if (n == null)  return 'nodata';
+    if (n <= 2)     return 'clean';
+    if (n <= 4)     return 'moderate';
+    return 'bad';
+}
+
+function recencyValue(loc) {
+    const parts = (loc.last_inspection || '').split('-').map(Number);
+    if (parts.length !== 3) return 'stale';
+    const dt = new Date(parts[2], parts[0] - 1, parts[1]);
+    const days = (NOW - dt) / 86400000;
+    if (days <= 180) return 'recent';
+    if (days <= 365) return 'year';
+    if (days <= 730) return 'old';
+    return 'stale';
+}
+
+function applyFilters() {
     const q = searchInput.value.trim().toLowerCase();
     allMarkers.forEach(marker => {
         const loc = marker.locationData;
-        const match = !q
-            || loc.name.toLowerCase().includes(q)
-            || loc.address.toLowerCase().includes(q);
+        const match = (!q || loc.name.toLowerCase().includes(q) || loc.address.toLowerCase().includes(q))
+            && activeFilters.severity.has(severityValue(loc))
+            && activeFilters.recency.has(recencyValue(loc));
 
         if (match && !map.hasLayer(marker)) marker.addTo(map);
         if (!match && map.hasLayer(marker)) map.removeLayer(marker);
     });
+}
+
+const TOTAL_PILLS = document.querySelectorAll('.pill').length;
+
+function updateFiltersBadge() {
+    const inactive = document.querySelectorAll('.pill:not(.active)').length;
+    const badge = document.getElementById('filters-badge');
+    if (inactive > 0) {
+        badge.textContent = `${inactive} off`;
+        badge.hidden = false;
+    } else {
+        badge.hidden = true;
+    }
+}
+
+document.querySelectorAll('.pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const { filter, value } = btn.dataset;
+        if (activeFilters[filter].has(value)) {
+            if (activeFilters[filter].size === 1) return;
+            activeFilters[filter].delete(value);
+            btn.classList.remove('active');
+        } else {
+            activeFilters[filter].add(value);
+            btn.classList.add('active');
+        }
+        updateFiltersBadge();
+        applyFilters();
+    });
 });
+
+const filtersToggle = document.getElementById('filters-toggle');
+const filtersPanel  = document.getElementById('filters-panel');
+
+filtersToggle.addEventListener('click', () => {
+    const open = !filtersPanel.hidden;
+    filtersPanel.hidden = open;
+    filtersToggle.classList.toggle('open', !open);
+});
+
+searchInput.addEventListener('input', applyFilters);
 
 loadLocations();
 

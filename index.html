@@ -6,6 +6,14 @@
     <title>RI Health Inspections</title>
 
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏥</text></svg>">
+
+    <!-- Open Graph / link previews -->
+    <meta property="og:type"        content="website">
+    <meta property="og:url"         content="https://inspectri.com">
+    <meta property="og:title"       content="InspectRI — Rhode Island Health Inspections">
+    <meta property="og:description" content="Search health inspection records for restaurants and food establishments across Rhode Island.">
+    <meta property="og:image"       content="https://inspectri.com/preview.png">
+    <meta name="twitter:card"       content="summary_large_image">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="css/app.css" />
 </head>
@@ -35,7 +43,7 @@
             </div>
         </div>
 
-        <div id="sidebar" class="collapsed">
+        <div id="sidebar">
             <div class="sidebar-top">
                 <div class="search-wrap">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -49,6 +57,45 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                     </svg>
                 </button>
+            </div>
+
+            <button class="filters-header" id="filters-toggle">
+                <span>Filters</span>
+                <div class="filters-header-right">
+                    <span class="filters-badge" id="filters-badge" hidden></span>
+                    <svg class="filters-chevron" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </div>
+            </button>
+
+            <div class="filters" id="filters-panel" hidden>
+                <div class="filter-group">
+                    <span class="filter-label">Severity</span>
+                    <div class="filter-pills">
+                        <button class="pill active" data-filter="severity" data-value="clean">
+                            <span class="pill-dot" style="background:#22c55e"></span>Clean
+                        </button>
+                        <button class="pill active" data-filter="severity" data-value="moderate">
+                            <span class="pill-dot" style="background:#f59e0b"></span>Moderate
+                        </button>
+                        <button class="pill active" data-filter="severity" data-value="bad">
+                            <span class="pill-dot" style="background:#ef4444"></span>Bad
+                        </button>
+                        <button class="pill active" data-filter="severity" data-value="nodata">
+                            <span class="pill-dot" style="background:#94a3b8"></span>No data
+                        </button>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">Last Inspected</span>
+                    <div class="filter-pills">
+                        <button class="pill active" data-filter="recency" data-value="recent">&lt; 6 months</button>
+                        <button class="pill active" data-filter="recency" data-value="year">6–12 months</button>
+                        <button class="pill active" data-filter="recency" data-value="old">1–2 years</button>
+                        <button class="pill active" data-filter="recency" data-value="stale">2+ years</button>
+                    </div>
+                </div>
             </div>
 
             <div class="sidebar-body" id="sidebar-body">

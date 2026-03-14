@@ -4,6 +4,7 @@ WORKDIR /app
 
 COPY dev-server.py .
 COPY index.html .
+COPY preview.png .
 COPY css/ css/
 COPY js/ js/
 COPY data/ data/
