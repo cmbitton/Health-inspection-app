@@ -11,6 +11,32 @@ const searchInput = document.getElementById('search-input');
 let allMarkers = [];
 let activeMarker = null;
 
+function clusterColor(markers) {
+    const counts = markers
+        .map(m => m.locationData?.violation_count)
+        .filter(n => n != null);
+    if (!counts.length) return '#94a3b8';
+    const avg = counts.reduce((a, b) => a + b, 0) / counts.length;
+    if (avg >= 5) return '#ef4444';
+    if (avg >= 3) return '#f59e0b';
+    return '#22c55e';
+}
+
+const markerCluster = L.markerClusterGroup({
+    maxClusterRadius: 40,
+    iconCreateFunction(cluster) {
+        const markers = cluster.getAllChildMarkers();
+        const color   = clusterColor(markers);
+        const count   = cluster.getChildCount();
+        return L.divIcon({
+            html: `<div class="cluster-icon" style="background:${color}">${count}</div>`,
+            className: '',
+            iconSize: [36, 36],
+        });
+    },
+});
+markerCluster.addTo(map);
+
 function activeStyle(loc) {
     const base = markerStyle(loc);
     return { ...base, radius: 10, weight: 3, fillOpacity: 1 };
@@ -63,10 +89,9 @@ async function loadLocations() {
 
         locations.forEach(loc => {
             if (!loc.lat || !loc.lng) return;
-            const marker = createMarker(loc);
-            marker.addTo(map);
-            allMarkers.push(marker);
+            allMarkers.push(createMarker(loc));
         });
+        markerCluster.addLayers(allMarkers);
     } catch (err) {
         console.error('Failed to load locations:', err);
     }
@@ -126,8 +151,8 @@ function applyFilters() {
             && activeFilters.severity.has(severityValue(loc))
             && activeFilters.recency.has(recencyValue(loc));
 
-        if (match && !map.hasLayer(marker)) marker.addTo(map);
-        if (!match && map.hasLayer(marker)) map.removeLayer(marker);
+        if (match && !markerCluster.hasLayer(marker)) markerCluster.addLayer(marker);
+        if (!match && markerCluster.hasLayer(marker)) markerCluster.removeLayer(marker);
     });
 }
 
