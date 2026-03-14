@@ -2,11 +2,11 @@
 """
 Refresh data/locations.json with latest inspection data from the RI health inspections API.
 
-Two phases:
+Phases:
   1. Incremental update — fetch new/re-inspected facilities from the top of the API
      (most recent first) and stop once we hit a full page of already-current records.
-  2. Backfill — populate violation_count for any location that's still missing it
-     (only needed on the very first run after this field was added).
+  2. Backfill — populate violation_count/risk_score for any location still missing it
+     (only needed on the very first run after these fields were added).
 
 Usage:
   python3 scripts/refresh.py
@@ -32,6 +32,33 @@ API_HEADERS = {
 }
 
 
+# ── Violation severity weights (FDA Food Code) ────────────────────────────────
+# Critical (weight 3): directly linked to foodborne illness
+CRITICAL = {5, 6, 7, 8, 9, 15, 20, 21, 22, 23, 25, 28, 29, 38}
+# Priority Foundation (weight 2): support the food safety system
+PRIORITY_FOUNDATION = {1, 2, 3, 4, 10, 11, 12, 13, 14, 16, 33, 35, 36, 39}
+# Everything else = Core (weight 1): maintenance/sanitation
+
+
+def violation_weight(violation_str):
+    """Extract the code number from a violation string and return its weight."""
+    try:
+        code = int(violation_str.split(" - ")[0].strip())
+        if code in CRITICAL:           return 3
+        if code in PRIORITY_FOUNDATION: return 2
+        return 1
+    except (ValueError, IndexError):
+        return 1
+
+
+def score_inspection(violations_dict):
+    """Return (violation_count, risk_score) from a violations dict."""
+    items = [v[0] for v in violations_dict.values() if v and v[0]]
+    count = len(items)
+    score = sum(violation_weight(v) for v in items)
+    return count, score
+
+
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
 def fetch_json(url, headers=API_HEADERS):
@@ -55,21 +82,21 @@ def parse_facility(item):
         "license_type":   item.get("columns", {}).get("2", "").replace("License Type: ", "").strip(),
     }
 
-def get_violation_count(facility_id):
+def get_inspection_scores(facility_id):
+    """Return (violation_count, risk_score) for the most recent inspection, or (None, None) on error."""
     url = INSPECTIONS.format(encode_id(facility_id))
     try:
         data = fetch_json(url)
         if not data:
-            return 0
-        most_recent = data[0]
-        violations = most_recent.get("violations", {})
-        return len([v for v in violations.values() if v and v[0]])
+            return 0, 0
+        count, score = score_inspection(data[0].get("violations", {}))
+        return count, score
     except urllib.error.HTTPError as e:
         print(f"    Warning: HTTP {e.code} fetching violations for {facility_id}")
-        return None
+        return None, None
     except Exception as e:
         print(f"    Warning: {e}")
-        return None
+        return None, None
 
 def geocode(address):
     query = urllib.parse.quote(f"{address}, Rhode Island")
@@ -118,19 +145,21 @@ def incremental_update(locations, by_id):
 
             if existing:
                 print(f"  Updated: {fac['name']} ({fac['last_inspection']})")
-                count = get_violation_count(fac["id"])
+                count, score = get_inspection_scores(fac["id"])
                 existing["last_inspection"] = fac["last_inspection"]
                 if count is not None:
                     existing["violation_count"] = count
+                    existing["risk_score"]      = score
                 updated_count += 1
             else:
                 print(f"  New:     {fac['name']}")
                 lat, lng = geocode(fac["address"])
                 time.sleep(1.1)  # Nominatim rate limit: 1 req/s
-                count = get_violation_count(fac["id"])
+                count, score = get_inspection_scores(fac["id"])
                 fac["lat"]             = lat
                 fac["lng"]             = lng
                 fac["violation_count"] = count if count is not None else 0
+                fac["risk_score"]      = score if score is not None else 0
                 locations.append(fac)
                 by_id[fac["id"]]       = fac
                 added_count += 1
@@ -150,7 +179,7 @@ def incremental_update(locations, by_id):
 # ── Phase 2: Backfill violation_count ────────────────────────────────────────
 
 def backfill(locations):
-    missing = [loc for loc in locations if "violation_count" not in loc]
+    missing = [loc for loc in locations if "risk_score" not in loc]
     if not missing:
         print("─── Phase 2: No backfill needed ───\n")
         return
@@ -158,9 +187,10 @@ def backfill(locations):
     print(f"─── Phase 2: Backfilling {len(missing)} locations ───")
 
     for i, loc in enumerate(missing, 1):
-        count = get_violation_count(loc["id"])
+        count, score = get_inspection_scores(loc["id"])
         if count is not None:
             loc["violation_count"] = count
+            loc["risk_score"]      = score
         time.sleep(0.35)
 
         if i % 100 == 0 or i == len(missing):

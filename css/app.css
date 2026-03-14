@@ -138,57 +138,160 @@ header p {
     scroll-behavior: smooth;
 }
 
-/* ── Filters ── */
-.filters-header {
-    width: 100%;
-    padding: 10px 16px;
-    border: none;
+/* ── Tab bar ── */
+.tab-bar {
+    display: flex;
     border-bottom: 1px solid #e2e8f0;
-    background: #f8fafc;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    font-size: 0.82rem;
+    background: white;
+    flex-shrink: 0;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 8px 6px 7px;
+    border: none;
+    border-bottom: 2px solid transparent;
+    background: none;
+    color: #94a3b8;
+    font-size: 0.7rem;
     font-weight: 600;
-    color: #1e293b;
-}
-
-.filters-header-right {
+    cursor: pointer;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 6px;
+    gap: 3px;
+    transition: color 0.15s, border-color 0.15s;
+    margin-bottom: -1px;
 }
 
-.filters-badge {
+.tab-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.tab-btn.active {
+    color: #3b82f6;
+    border-bottom-color: #3b82f6;
+}
+
+.tab-btn[data-tab="worst"].active {
+    color: #dc2626;
+    border-bottom-color: #dc2626;
+}
+
+.tab-badge {
+    display: inline-block;
     background: #3b82f6;
     color: white;
-    font-size: 0.68rem;
+    font-size: 0.6rem;
     font-weight: 700;
-    padding: 1px 6px;
+    padding: 0 4px;
     border-radius: 99px;
+    line-height: 1.6;
+    margin-left: 2px;
 }
 
-.filters-chevron {
-    width: 14px;
-    height: 14px;
+/* ── Filters panel ── */
+#filters-panel {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+}
+
+#filters-panel[hidden] {
+    display: none;
+}
+
+/* ── List view ── */
+.list-title {
+    font-size: 0.78rem;
+    font-weight: 700;
     color: #64748b;
-    transition: transform 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    padding: 10px 0 6px;
 }
 
-.filters-header.open .filters-chevron {
-    transform: rotate(180deg);
+.list-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f5f9;
+    cursor: pointer;
 }
 
-.filters {
+.list-item:hover {
+    background: #f8fafc;
+    margin: 0 -16px;
     padding: 10px 16px;
-    border-bottom: 1px solid #e2e8f0;
+}
+
+.list-dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    border: 2px solid white;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.15);
+}
+
+.list-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.list-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #1e293b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.list-address {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.list-risk {
+    font-size: 0.72rem;
+    font-weight: 600;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* ── Back button ── */
+.back-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 12px;
+    padding: 5px 0;
+    border: none;
+    background: none;
+    color: #3b82f6;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.back-btn:hover {
+    text-decoration: underline;
+}
+
+/* ── Filters ── */
+.filters {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-.filters[hidden] {
+.sidebar-body[hidden] {
     display: none;
 }
 
@@ -262,9 +365,35 @@ header p {
     font-size: 0.875rem;
 }
 
+/* ── Cleanliness score ── */
+.cleanliness-score {
+    font-size: 0.95rem;
+    font-weight: 800;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.cleanliness-score.large {
+    font-size: 1.4rem;
+}
+
+.cs-label {
+    font-size: 0.65em;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
 /* ── Location Header ── */
 .loc-header {
     margin-bottom: 16px;
+}
+
+.loc-header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 6px;
 }
 
 .loc-name {
@@ -278,7 +407,6 @@ header p {
     display: flex;
     flex-direction: column;
     gap: 3px;
-    margin-top: 6px;
 }
 
 .loc-meta span {

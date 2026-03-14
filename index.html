@@ -36,9 +36,9 @@
                 </svg>
             </button>
             <div class="map-legend">
-                <div class="legend-row"><div class="dot" style="background:#22c55e"></div> 0–2 violations</div>
-                <div class="legend-row"><div class="dot" style="background:#f59e0b"></div> 3–4 violations</div>
-                <div class="legend-row"><div class="dot" style="background:#ef4444"></div> 5+ violations</div>
+                <div class="legend-row"><div class="dot" style="background:#22c55e"></div> Low risk</div>
+                <div class="legend-row"><div class="dot" style="background:#f59e0b"></div> Moderate risk</div>
+                <div class="legend-row"><div class="dot" style="background:#ef4444"></div> High risk</div>
                 <div class="legend-row"><div class="dot" style="background:#94a3b8"></div> No data</div>
             </div>
         </div>
@@ -59,41 +59,59 @@
                 </button>
             </div>
 
-            <button class="filters-header" id="filters-toggle">
-                <span>Filters</span>
-                <div class="filters-header-right">
-                    <span class="filters-badge" id="filters-badge" hidden></span>
-                    <svg class="filters-chevron" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            <div class="tab-bar">
+                <button class="tab-btn active" data-tab="explore">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0L6.343 16.657a8 8 0 1111.314 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                     </svg>
-                </div>
-            </button>
+                    <span class="tab-label">Explore</span>
+                </button>
+                <button class="tab-btn" data-tab="worst">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                    <span class="tab-label">Worst</span>
+                </button>
+                <button class="tab-btn" data-tab="filters">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/>
+                    </svg>
+                    <span class="tab-label">Filters<span class="tab-badge" id="filters-badge" hidden></span></span>
+                </button>
+            </div>
 
-            <div class="filters" id="filters-panel" hidden>
-                <div class="filter-group">
-                    <span class="filter-label">Severity</span>
-                    <div class="filter-pills">
-                        <button class="pill active" data-filter="severity" data-value="clean">
-                            <span class="pill-dot" style="background:#22c55e"></span>Clean
-                        </button>
-                        <button class="pill active" data-filter="severity" data-value="moderate">
-                            <span class="pill-dot" style="background:#f59e0b"></span>Moderate
-                        </button>
-                        <button class="pill active" data-filter="severity" data-value="bad">
-                            <span class="pill-dot" style="background:#ef4444"></span>Bad
-                        </button>
-                        <button class="pill active" data-filter="severity" data-value="nodata">
-                            <span class="pill-dot" style="background:#94a3b8"></span>No data
-                        </button>
+            <div id="filters-panel" hidden>
+                <div class="filters">
+                    <div class="filter-group">
+                        <span class="filter-label">Severity</span>
+                        <div class="filter-pills">
+                            <button class="pill active" data-filter="severity" data-value="clean">
+                                <span class="pill-dot" style="background:#22c55e"></span>Low risk
+                            </button>
+                            <button class="pill active" data-filter="severity" data-value="moderate">
+                                <span class="pill-dot" style="background:#f59e0b"></span>Moderate risk
+                            </button>
+                            <button class="pill active" data-filter="severity" data-value="bad">
+                                <span class="pill-dot" style="background:#ef4444"></span>High risk
+                            </button>
+                            <button class="pill active" data-filter="severity" data-value="nodata">
+                                <span class="pill-dot" style="background:#94a3b8"></span>No data
+                            </button>
+                        </div>
                     </div>
-                </div>
-                <div class="filter-group">
-                    <span class="filter-label">Last Inspected</span>
-                    <div class="filter-pills">
-                        <button class="pill active" data-filter="recency" data-value="recent">&lt; 6 months</button>
-                        <button class="pill active" data-filter="recency" data-value="year">6–12 months</button>
-                        <button class="pill active" data-filter="recency" data-value="old">1–2 years</button>
-                        <button class="pill active" data-filter="recency" data-value="stale">2+ years</button>
+                    <div class="filter-group">
+                        <span class="filter-label">Last Inspected</span>
+                        <div class="filter-pills">
+                            <button class="pill active" data-filter="recency" data-value="recent">&lt; 6 months</button>
+                            <button class="pill active" data-filter="recency" data-value="year">6–12 months</button>
+                            <button class="pill active" data-filter="recency" data-value="old">1–2 years</button>
+                            <button class="pill active" data-filter="recency" data-value="stale">2+ years</button>
+                        </div>
                     </div>
                 </div>
             </div>
