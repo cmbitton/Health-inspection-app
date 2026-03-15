@@ -191,6 +191,10 @@ header p {
     margin-left: 2px;
 }
 
+.tab-badge[hidden] {
+    display: none;
+}
+
 /* ── Filters panel ── */
 #filters-panel {
     flex: 1;
@@ -656,7 +660,9 @@ header p {
         flex: none;
     }
 
-    #sidebar.collapsed .sidebar-body {
+    #sidebar.collapsed .sidebar-body,
+    #sidebar.collapsed .tab-bar,
+    #sidebar.collapsed #filters-panel {
         display: none;
     }
 
