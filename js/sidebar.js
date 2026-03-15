@@ -15,15 +15,6 @@ function riskColor(loc) {
     return '#ef4444';
 }
 
-function riskLabel(loc) {
-    const s = loc.risk_score;
-    if (s == null) return 'No data';
-    if (s === 0)   return 'Clean';
-    if (s <= 2)    return 'Low risk';
-    if (s <= 9)    return 'Moderate';
-    return 'High risk';
-}
-
 const PAGE_SIZE = 20;
 let _listLocations = [];
 let _sortedCache   = [];

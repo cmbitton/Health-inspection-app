@@ -298,12 +298,6 @@ header p {
     color: white;
 }
 
-.list-risk {
-    font-size: 0.72rem;
-    font-weight: 600;
-    white-space: nowrap;
-    flex-shrink: 0;
-}
 
 /* ── Back button ── */
 .back-btn {

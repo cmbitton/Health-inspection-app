@@ -55,7 +55,6 @@ function markerStyle(loc) {
 function violationLabel(loc) {
     const s = loc.risk_score;
     if (s == null) return 'No data';
-    if (s === 0)   return '✓ Clean';
     if (s <= 2)    return 'Low risk';
     if (s <= 9)    return 'Moderate risk';
     return 'High risk';
