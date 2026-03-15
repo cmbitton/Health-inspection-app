@@ -23,7 +23,11 @@ header {
 }
 
 header .logo {
-    font-size: 1.4rem;
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.15);
 }
 
 header h1 {
@@ -260,6 +264,38 @@ header p {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.list-meta {
+    font-size: 0.7rem;
+    color: #cbd5e1;
+    margin-top: 1px;
+}
+
+/* ── Sort bar ── */
+.sort-bar {
+    display: flex;
+    gap: 5px;
+    padding: 8px 0 4px;
+}
+
+.sort-btn {
+    padding: 3px 9px;
+    border: 1px solid #e2e8f0;
+    border-radius: 99px;
+    background: #f8fafc;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+}
+
+.sort-btn.active {
+    background: #1e293b;
+    border-color: #1e293b;
+    color: white;
 }
 
 .list-risk {

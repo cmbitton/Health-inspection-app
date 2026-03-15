@@ -242,8 +242,7 @@ searchInput.addEventListener('input', () => {
             const loc = m.locationData;
             return loc.name.toLowerCase().includes(q) || loc.address.toLowerCase().includes(q);
         })
-        .map(m => m.locationData)
-        .sort((a, b) => (a.risk_score ?? Infinity) - (b.risk_score ?? Infinity))
+        .map(m => m.locationData);
     renderLocationList(matches, `${matches.length} result${matches.length !== 1 ? 's' : ''} for "${q}"`);
 });
 
@@ -282,7 +281,7 @@ function activateWorstOffenders() {
     });
 
     setSidebarCollapsed(false);
-    renderLocationList(top, '🚨 Worst Offenders');
+    renderLocationList(top, '🚨 Worst Offenders', { field: 'score', dir: 'desc' });
 }
 
 function deactivateWorstOffenders() {

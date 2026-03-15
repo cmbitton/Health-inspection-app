@@ -26,12 +26,64 @@ function riskLabel(loc) {
 
 const PAGE_SIZE = 20;
 let _listLocations = [];
-let _listOffset = 0;
+let _sortedCache   = [];
+let _listOffset    = 0;
+let _sortField     = 'score';
+let _sortDir       = 'asc';
 
-function renderLocationList(locations, title) {
-    currentListFn = () => renderLocationList(locations, title);
+function formatDate(str) {
+    if (!str) return '';
+    const [m, d, y] = str.split('-');
+    if (!y) return str;
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return `${months[+m - 1]} ${+d}, ${y}`;
+}
+
+function dateValue(str) {
+    if (!str) return 0;
+    const [m, d, y] = str.split('-').map(Number);
+    return (y || 0) * 10000 + (m || 0) * 100 + (d || 0);
+}
+
+function buildSortedCache() {
+    return [..._listLocations].sort((a, b) => {
+        let va, vb;
+        if (_sortField === 'score') {
+            va = a.risk_score ?? Infinity;
+            vb = b.risk_score ?? Infinity;
+        } else if (_sortField === 'date') {
+            va = dateValue(a.last_inspection);
+            vb = dateValue(b.last_inspection);
+        } else {
+            va = a.name.toLowerCase();
+            vb = b.name.toLowerCase();
+        }
+        if (va < vb) return _sortDir === 'asc' ? -1 : 1;
+        if (va > vb) return _sortDir === 'asc' ? 1 : -1;
+        return 0;
+    });
+}
+
+function renderSortBar() {
+    const fields = [
+        { field: 'score', label: 'Score', defaultDir: 'asc'  },
+        { field: 'date',  label: 'Date',  defaultDir: 'desc' },
+        { field: 'name',  label: 'Name',  defaultDir: 'asc'  },
+    ];
+    return `<div class="sort-bar">${fields.map(({ field, label, defaultDir }) => {
+        const active = _sortField === field;
+        const arrow  = active ? (_sortDir === 'asc' ? ' ↑' : ' ↓') : '';
+        return `<button class="sort-btn${active ? ' active' : ''}" data-field="${field}" data-default-dir="${defaultDir}">${escHtml(label)}<span class="sort-arrow">${arrow}</span></button>`;
+    }).join('')}</div>`;
+}
+
+function renderLocationList(locations, title, defaultSort = { field: 'score', dir: 'asc' }) {
+    currentListFn = () => renderLocationList(locations, title, defaultSort);
     _listLocations = locations;
-    _listOffset = 0;
+    _sortField     = defaultSort.field;
+    _sortDir       = defaultSort.dir;
+    _sortedCache   = buildSortedCache();
+    _listOffset    = 0;
 
     const sidebarBody = document.getElementById('sidebar-body');
 
@@ -41,11 +93,33 @@ function renderLocationList(locations, title) {
         return;
     }
 
-    sidebarBody.innerHTML = `<div class="list-title">${escHtml(title)}</div><div id="list-items"></div>`;
+    sidebarBody.innerHTML = `<div class="list-title">${escHtml(title)}</div>${renderSortBar()}<div id="list-items"></div>`;
+
+    document.querySelectorAll('.sort-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const { field } = btn.dataset;
+            if (_sortField === field) {
+                _sortDir = _sortDir === 'asc' ? 'desc' : 'asc';
+            } else {
+                _sortField = field;
+                _sortDir   = btn.dataset.defaultDir;
+            }
+            _sortedCache = buildSortedCache();
+            _listOffset  = 0;
+            document.querySelectorAll('.sort-btn').forEach(b => {
+                const isActive = b.dataset.field === _sortField;
+                b.classList.toggle('active', isActive);
+                b.querySelector('.sort-arrow').textContent = isActive ? (_sortDir === 'asc' ? ' ↑' : ' ↓') : '';
+            });
+            document.getElementById('list-items').innerHTML = '';
+            appendListItems();
+        });
+    });
+
     appendListItems();
 
     sidebarBody.onscroll = () => {
-        if (_listOffset >= _listLocations.length) return;
+        if (_listOffset >= _sortedCache.length) return;
         if (sidebarBody.scrollTop + sidebarBody.clientHeight >= sidebarBody.scrollHeight - 120) {
             appendListItems();
         }
@@ -53,7 +127,7 @@ function renderLocationList(locations, title) {
 }
 
 function appendListItems() {
-    const batch = _listLocations.slice(_listOffset, _listOffset + PAGE_SIZE);
+    const batch = _sortedCache.slice(_listOffset, _listOffset + PAGE_SIZE);
     _listOffset += batch.length;
     const container = document.getElementById('list-items');
 
@@ -68,6 +142,7 @@ function appendListItems() {
             <div class="list-info">
                 <div class="list-name">${escHtml(loc.name)}</div>
                 <div class="list-address">${escHtml(loc.address)}</div>
+                <div class="list-meta">${escHtml(formatDate(loc.last_inspection))}</div>
             </div>
             <div class="cleanliness-score" style="color:${riskColor(loc)}">${scoreDisplay}<span class="cs-label">/100</span></div>`;
         div.addEventListener('click', () => {
