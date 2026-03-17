@@ -95,6 +95,7 @@ async function loadLocations() {
             allMarkers.push(createMarker(loc));
         });
         markerCluster.addLayers(allMarkers);
+        showExploreList();
     } catch (err) {
         console.error('Failed to load locations:', err);
     }
@@ -123,6 +124,8 @@ sidebarToggle.addEventListener('click', () => {
 const activeFilters = {
     severity: new Set(['clean', 'moderate', 'bad', 'nodata']),
     recency:  new Set(['recent', 'year', 'old', 'stale']),
+    category: new Set(['restaurant', 'school', 'grocery', 'food-truck', 'caterer', 'healthcare', 'other']),
+    cuisine:  new Set(['pizza', 'italian', 'japanese', 'chinese', 'mexican', 'thai', 'indian', 'greek', 'seafood', 'breakfast', 'american', 'bar', 'other']),
 };
 
 const NOW = Date.now();
@@ -133,6 +136,22 @@ function severityValue(loc) {
     if (s <= 2)    return 'clean';
     if (s <= 9)    return 'moderate';
     return 'bad';
+}
+
+function locationCategory(loc) {
+    const lt = loc.license_type || '';
+    // License type is definitive for these — Google would just call them "restaurant"
+    if (lt.startsWith('Mobile Food Service')) return 'food-truck';
+    if (lt === 'Caterer or Commissary') return 'caterer';
+    // Google-validated category is the most accurate source (skip 'other' — fall through to name patterns)
+    if (loc.google_category && loc.google_category !== 'other') return loc.google_category;
+    // Fallbacks for locations not yet enriched
+    const name = (loc.name || '').toUpperCase();
+    if (/SCHOOL|ACADEMY|UNIVERSITY|COLLEGE|DAYCARE|DAY CARE|PRESCHOOL|PRE-SCHOOL|MONTESSORI|CHILDCARE|HEAD START/.test(name)) return 'school';
+    if (/\bHOSPITAL\b|NURSING HOME|ASSISTED LIVING|REHABILITATION|HEALTH CENTER|MEDICAL CENTER/.test(name)) return 'healthcare';
+    if (lt.startsWith('Seats')) return 'restaurant';
+    if (lt.startsWith('Cash Registers') || lt === 'Retail' || lt === 'Retail Food Peddler' || lt.startsWith('Market')) return 'grocery';
+    return 'other';
 }
 
 function recencyValue(loc) {
@@ -151,13 +170,28 @@ function applyFilters() {
     const q = searchInput.value.trim().toLowerCase();
     allMarkers.forEach(marker => {
         const loc = marker.locationData;
+        const cat = locationCategory(loc);
+        const cuisineMatch = cat !== 'restaurant' || activeFilters.cuisine.has(loc.cuisine || 'other');
         const match = (!q || loc.name.toLowerCase().includes(q) || loc.address.toLowerCase().includes(q))
             && activeFilters.severity.has(severityValue(loc))
-            && activeFilters.recency.has(recencyValue(loc));
+            && activeFilters.recency.has(recencyValue(loc))
+            && activeFilters.category.has(cat)
+            && cuisineMatch;
 
         if (match && !markerCluster.hasLayer(marker)) markerCluster.addLayer(marker);
         if (!match && markerCluster.hasLayer(marker)) markerCluster.removeLayer(marker);
     });
+
+    if (!q && document.querySelector('.tab-btn[data-tab="explore"]')?.classList.contains('active')) {
+        showExploreList();
+    }
+}
+
+function showExploreList() {
+    const visible = allMarkers
+        .filter(m => markerCluster.hasLayer(m))
+        .map(m => m.locationData);
+    renderLocationList(visible, `${visible.length} location${visible.length !== 1 ? 's' : ''}`, { field: 'date', dir: 'desc' });
 }
 
 const TOTAL_PILLS = document.querySelectorAll('.pill').length;
@@ -173,9 +207,40 @@ function updateFiltersBadge() {
     }
 }
 
+const ALL_CATEGORIES = ['restaurant', 'school', 'grocery', 'food-truck', 'caterer', 'healthcare', 'other'];
+const ALL_CUISINES   = ['pizza', 'italian', 'japanese', 'chinese', 'mexican', 'thai', 'indian', 'greek', 'seafood', 'breakfast', 'american', 'bar', 'other'];
+
+function cuisineFiltered() {
+    return activeFilters.cuisine.size < ALL_CUISINES.length;
+}
+
+function syncCategoryPills() {
+    document.querySelectorAll('.pill[data-filter="category"]').forEach(p => {
+        p.classList.toggle('active', activeFilters.category.has(p.dataset.value));
+    });
+}
+
+function syncCuisinePills() {
+    document.querySelectorAll('.pill[data-filter="cuisine"]').forEach(p => {
+        p.classList.toggle('active', activeFilters.cuisine.has(p.dataset.value));
+    });
+}
+
 document.querySelectorAll('.pill').forEach(btn => {
     btn.addEventListener('click', () => {
         const { filter, value } = btn.dataset;
+
+        // Clicking a locked non-restaurant category resets cuisine and restores all categories
+        if (filter === 'category' && value !== 'restaurant' && cuisineFiltered()) {
+            ALL_CUISINES.forEach(v => activeFilters.cuisine.add(v));
+            activeFilters.category = new Set(ALL_CATEGORIES);
+            syncCuisinePills();
+            syncCategoryPills();
+            updateFiltersBadge();
+            applyFilters();
+            return;
+        }
+
         if (activeFilters[filter].has(value)) {
             if (activeFilters[filter].size === 1) return;
             activeFilters[filter].delete(value);
@@ -184,6 +249,13 @@ document.querySelectorAll('.pill').forEach(btn => {
             activeFilters[filter].add(value);
             btn.classList.add('active');
         }
+
+        if (filter === 'cuisine') {
+            const allOn = activeFilters.cuisine.size === ALL_CUISINES.length;
+            activeFilters.category = new Set(allOn ? ALL_CATEGORIES : ['restaurant']);
+            syncCategoryPills();
+        }
+
         updateFiltersBadge();
         applyFilters();
     });
@@ -203,7 +275,7 @@ const PLACEHOLDER_HTML = `
         <p>Click a map pin to view inspection history</p>
     </div>`;
 
-function setActiveTab(tab) {
+function setActiveTab(tab, source = 'code') {
     tabBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tab));
     const showFilters = tab === 'filters';
     filtersPanel.hidden = !showFilters;
@@ -214,27 +286,20 @@ function setActiveTab(tab) {
     } else {
         if (worstOffendersActive) deactivateWorstOffenders();
     }
+
+    if (tab === 'explore' && source === 'user') {
+        showExploreList();
+    }
 }
 
-tabBtns.forEach(btn => btn.addEventListener('click', () => setActiveTab(btn.dataset.tab)));
+tabBtns.forEach(btn => btn.addEventListener('click', () => setActiveTab(btn.dataset.tab, 'user')));
 
 searchInput.addEventListener('input', () => {
     setActiveTab('explore');
     applyFilters();
     const q = searchInput.value.trim().toLowerCase();
     if (!q) {
-        currentListFn = null;
-        document.getElementById('sidebar-body').innerHTML = `
-            <div class="placeholder">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                        d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0L6.343 16.657a8 8 0 1111.314 0z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                </svg>
-                <p>Click a map pin to view inspection history</p>
-            </div>`;
-        return;
+        return; // applyFilters() above already called showExploreList()
     }
     const matches = allMarkers
         .filter(m => {
@@ -287,7 +352,6 @@ function deactivateWorstOffenders() {
     worstOffendersActive = false;
     currentListFn = null;
     applyFilters();
-    sidebarBody.innerHTML = PLACEHOLDER_HTML;
 }
 
 loadLocations();

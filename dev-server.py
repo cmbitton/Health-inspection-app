@@ -10,7 +10,7 @@ PORT = 8080
 PROXY_PREFIX = "/api-proxy/"
 UPSTREAM = "https://ri.healthinspections.us/ri/API/index.cfm/"
 
-CACHE_TTL = 3600  # seconds (1 hour)
+CACHE_TTL = 86400  # seconds (24 hours)
 _cache = {}  # path -> (body, content_type, timestamp)
 
 
