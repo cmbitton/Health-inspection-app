@@ -141,6 +141,7 @@ function severityValue(loc) {
 function locationCategory(loc) {
     const lt = loc.license_type || '';
     if (lt === 'Caterer or Commissary') return 'caterer';
+    if (lt === 'Cottage Food Manufacture') return 'other';
     // Google-validated category is the most accurate source (skip 'other' — fall through to name patterns)
     if (loc.google_category && loc.google_category !== 'other') return loc.google_category;
     // License type is definitive when Google couldn't be more specific
