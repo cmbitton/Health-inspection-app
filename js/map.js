@@ -140,11 +140,11 @@ function severityValue(loc) {
 
 function locationCategory(loc) {
     const lt = loc.license_type || '';
-    // License type is definitive for these — Google would just call them "restaurant"
-    if (lt.startsWith('Mobile Food Service')) return 'food-truck';
     if (lt === 'Caterer or Commissary') return 'caterer';
     // Google-validated category is the most accurate source (skip 'other' — fall through to name patterns)
     if (loc.google_category && loc.google_category !== 'other') return loc.google_category;
+    // License type is definitive when Google couldn't be more specific
+    if (lt.startsWith('Mobile Food Service')) return 'food-truck';
     // Fallbacks for locations not yet enriched
     const name = (loc.name || '').toUpperCase();
     if (/SCHOOL|ACADEMY|UNIVERSITY|COLLEGE|DAYCARE|DAY CARE|PRESCHOOL|PRE-SCHOOL|MONTESSORI|CHILDCARE|HEAD START/.test(name)) return 'school';
