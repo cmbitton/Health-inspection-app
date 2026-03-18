@@ -7713,19 +7713,6 @@
     "google_category": "school"
   },
   {
-    "id": "242982",
-    "name": "DUNKIN DONUTS",
-    "address": "536 EAST MAIN ROAD MIDDLETOWN RI 02842",
-    "last_inspection": "01-28-2026",
-    "license_type": "Seats -  Less than 50",
-    "lat": 41.52246880000001,
-    "lng": -71.28270599999999,
-    "violation_count": 0,
-    "risk_score": 0,
-    "cuisine": "breakfast",
-    "google_category": "restaurant"
-  },
-  {
     "id": "244578",
     "name": "HUGH B BAIN JR HIGH SCHOOL",
     "address": "135 GANSETT AVENUE CRANSTON RI 02910",
@@ -10972,19 +10959,6 @@
     "risk_score": 3,
     "google_category": "restaurant",
     "cuisine": "other"
-  },
-  {
-    "id": "713981",
-    "name": "THE RHODE HOUSE",
-    "address": "99 FORTIN RD STE 116 KINGSTON RI 02881",
-    "last_inspection": "01-12-2026",
-    "license_type": "Seats -  Less than 50",
-    "lat": 41.4860303,
-    "lng": -71.5240692,
-    "violation_count": 0,
-    "risk_score": 0,
-    "cuisine": "american",
-    "google_category": "restaurant"
   },
   {
     "id": "714082",
@@ -15041,19 +15015,6 @@
     "risk_score": 3,
     "google_category": "other",
     "cuisine": "other"
-  },
-  {
-    "id": "242980",
-    "name": "DUNKIN DONUTS",
-    "address": "811 WEST MAIN ROAD MIDDLETOWN RI 02842",
-    "last_inspection": "12-10-2025",
-    "license_type": "Seats -  Less than 50",
-    "lat": 41.52472849999999,
-    "lng": -71.2973916,
-    "violation_count": 0,
-    "risk_score": 0,
-    "cuisine": "breakfast",
-    "google_category": "restaurant"
   },
   {
     "id": "246876",
@@ -24755,18 +24716,6 @@
     "cuisine": "other"
   },
   {
-    "id": "937480",
-    "name": "THE GRODEN CENTER - GRODEN LEARNING CENTER",
-    "address": "73 BRANCH PIKE SMITHFIELD RI 02917",
-    "last_inspection": "10-22-2025",
-    "license_type": "Food Service (Non-Profit)",
-    "lat": 41.9372881,
-    "lng": -71.5418791,
-    "violation_count": 0,
-    "risk_score": 0,
-    "google_category": "other"
-  },
-  {
     "id": "937960",
     "name": "UMAMI BUFFET",
     "address": "872 WEST MAIN RD MIDDLETOWN RI 02842",
@@ -27962,19 +27911,6 @@
     "violation_count": 0,
     "risk_score": 0,
     "google_category": "grocery"
-  },
-  {
-    "id": "262369",
-    "name": "DUNKIN DONUTS",
-    "address": "159 EAST MAIN ROAD MIDDLETOWN RI 02842",
-    "last_inspection": "10-06-2025",
-    "license_type": "Seats -  Less than 50",
-    "lat": 41.5177287,
-    "lng": -71.2955435,
-    "violation_count": 0,
-    "risk_score": 0,
-    "cuisine": "breakfast",
-    "google_category": "restaurant"
   },
   {
     "id": "263820",
@@ -39806,19 +39742,6 @@
     "google_category": "restaurant"
   },
   {
-    "id": "865843",
-    "name": "SWEET LICKS ICE CREAM",
-    "address": "995 MINERAL SPRING AVENUE NORTH PROVIDENCE RI 02904",
-    "last_inspection": "08-04-2025",
-    "license_type": "Seats -  Less than 50",
-    "lat": 41.8692942,
-    "lng": -71.4225645,
-    "violation_count": 0,
-    "risk_score": 0,
-    "google_category": "restaurant",
-    "cuisine": "other"
-  },
-  {
     "id": "866205",
     "name": "TOOTSIE'S ICE CREAM LLC",
     "address": "105 FRANKLIN STREET WESTERLY RI 02891",
@@ -41480,19 +41403,6 @@
     "risk_score": 7,
     "cuisine": "american",
     "google_category": "restaurant"
-  },
-  {
-    "id": "415101",
-    "name": "BY THE BAY SMOKE SHOP LLC",
-    "address": "191 AIRPORT RD WARWICK RI 02889",
-    "last_inspection": "07-23-2025",
-    "license_type": "Seats -  Less than 50",
-    "lat": 41.7334482,
-    "lng": -71.4140737,
-    "violation_count": 0,
-    "risk_score": 0,
-    "google_category": "other",
-    "cuisine": "other"
   },
   {
     "id": "612559",
@@ -43222,19 +43132,6 @@
     "risk_score": 4,
     "google_category": "restaurant",
     "cuisine": "american"
-  },
-  {
-    "id": "358296",
-    "name": "NEW PEKING RESTAURANT",
-    "address": "1670 MINERAL SPRING AVE NORTH PROVIDENCE RI 02904",
-    "last_inspection": "07-14-2025",
-    "license_type": "Seats -  Less than 50",
-    "lat": 41.86315889999999,
-    "lng": -71.4519907,
-    "violation_count": 0,
-    "risk_score": 0,
-    "cuisine": "chinese",
-    "google_category": "restaurant"
   },
   {
     "id": "413754",
@@ -62730,18 +62627,6 @@
     "cuisine": "other"
   },
   {
-    "id": "245152",
-    "name": "GUITERAS SCHOOL",
-    "address": "35 WASHINGTON STREET BRISTOL RI 02809",
-    "last_inspection": "02-27-2025",
-    "license_type": "Food Service (Non-Profit)",
-    "lat": 41.6773928,
-    "lng": -71.2768163,
-    "violation_count": 0,
-    "risk_score": 0,
-    "google_category": "school"
-  },
-  {
     "id": "262062",
     "name": "TRINITY EPISCOPAL CHURCH",
     "address": "249 DANIELSON PIKE SCITUATE RI 02857",
@@ -72441,19 +72326,6 @@
     "lng": -71.45763749999999,
     "violation_count": 8,
     "risk_score": 9,
-    "google_category": "restaurant",
-    "cuisine": "other"
-  },
-  {
-    "id": "857332",
-    "name": "GORDOS PLACE RESTAURANT LLC",
-    "address": "564 PLAINFIELD ST PROVIDENCE RI 02909",
-    "last_inspection": "10-23-2024",
-    "license_type": "Seats -  Less than 50",
-    "lat": 41.8128329,
-    "lng": -71.45745409999999,
-    "violation_count": 0,
-    "risk_score": 0,
     "google_category": "restaurant",
     "cuisine": "other"
   },
@@ -84671,19 +84543,6 @@
     "violation_count": 0,
     "risk_score": 0,
     "google_category": "other"
-  },
-  {
-    "id": "865808",
-    "name": "ISLAND HOUSE BAR & GRILL",
-    "address": "32 SPRUCE STREET PROVIDENCE RI 02903",
-    "last_inspection": "03-13-2023",
-    "license_type": "Seats -  Less than 50",
-    "lat": 41.8240458,
-    "lng": -71.42448639999999,
-    "violation_count": 0,
-    "risk_score": 0,
-    "google_category": "restaurant",
-    "cuisine": "other"
   },
   {
     "id": "937186",
