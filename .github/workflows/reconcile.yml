@@ -1,12 +1,12 @@
-name: Daily Data Refresh
+name: Weekly Reconcile
 
 on:
   schedule:
-    - cron: '0 6 * * *'  # 6am UTC (2am ET) daily
-  workflow_dispatch:      # allow manual trigger from GitHub Actions UI
+    - cron: '0 7 * * 1'  # Monday 7am UTC (3am ET)
+  workflow_dispatch:
 
 jobs:
-  refresh:
+  reconcile:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -15,8 +15,8 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Run refresh script
-        run: python3 scripts/refresh.py
+      - name: Run reconcile
+        run: python3 scripts/refresh.py --reconcile
         env:
           GOOGLE_MAPS_KEY: ${{ secrets.GOOGLE_MAPS_KEY }}
 
@@ -29,7 +29,7 @@ jobs:
             echo "No changes — skipping deploy"
             echo "CHANGED=false" >> $GITHUB_ENV
           else
-            git commit -m "Daily data refresh"
+            git commit -m "Weekly reconcile"
             git push
             echo "CHANGED=true" >> $GITHUB_ENV
           fi

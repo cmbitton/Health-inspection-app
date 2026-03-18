@@ -18,6 +18,7 @@ Usage:
 import base64
 import json
 import os
+import re
 import sys
 import time
 import urllib.parse
@@ -33,6 +34,7 @@ FACILITIES  = "https://ri.healthinspections.us/ri/API/index.cfm/facilities/{}/0"
 INSPECTIONS = "https://ri.healthinspections.us/ri/API/index.cfm/inspectionsData/{}"
 GEOCODE_URL = "https://maps.googleapis.com/maps/api/geocode/json?address={}&key={}"
 PLACES_URL  = "https://places.googleapis.com/v1/places:searchText"
+HTML_BASE   = "https://ri.healthinspections.us/"
 
 GOOGLE_KEY = os.environ.get("GOOGLE_MAPS_KEY")
 if not GOOGLE_KEY:
@@ -45,14 +47,111 @@ API_HEADERS = {
 }
 
 
-# ── Violation severity weights (FDA Food Code) ────────────────────────────────
-# Critical (weight 3): directly linked to foodborne illness
-CRITICAL = {5, 6, 7, 8, 9, 15, 20, 21, 22, 23, 25, 28, 29, 38}
-# Priority Foundation (weight 2): support the food safety system
-PRIORITY_FOUNDATION = {1, 2, 3, 4, 10, 11, 12, 13, 14, 16, 33, 35, 36, 39}
-# Everything else = Core (weight 1): maintenance/sanitation
+# ── Violation severity weights (FDA Food Code 2022) ───────────────────────────
+# Extracted from Annex 7 of the FDA Food Code 2022 PDF.
+# For codes with mixed subsection severities, highest is used (P > Pf > C).
+# P = Priority (weight 3), Pf = Priority Foundation (weight 2), C = Core (weight 1)
+CODE_SEVERITY = {
+    "2-101.11": "Pf", "2-102.11": "Pf", "2-102.12": "C",  "2-103.11": "Pf",
+    "2-201.11": "P",  "2-201.12": "P",  "2-201.13": "P",
+    "2-301.11": "P",  "2-301.12": "P",  "2-301.14": "P",  "2-301.15": "Pf",
+    "2-301.16": "Pf", "2-302.11": "Pf", "2-303.11": "C",  "2-304.11": "C",
+    "2-401.11": "C",  "2-401.12": "C",  "2-401.13": "C",  "2-402.11": "C",
+    "2-403.11": "Pf", "2-501.11": "Pf",
+    "3-101.11": "P",
+    "3-201.11": "P",  "3-201.12": "P",  "3-201.13": "P",  "3-201.14": "P",
+    "3-201.15": "P",  "3-201.16": "P",  "3-201.17": "P",
+    "3-202.11": "P",  "3-202.110": "P", "3-202.12": "P",  "3-202.13": "P",
+    "3-202.14": "P",  "3-202.15": "Pf", "3-202.16": "P",  "3-202.17": "C",
+    "3-202.18": "Pf", "3-203.11": "C",  "3-203.12": "Pf",
+    "3-301.11": "P",  "3-301.12": "P",
+    "3-302.11": "P",  "3-302.12": "C",  "3-302.13": "P",  "3-302.14": "P",
+    "3-302.15": "Pf", "3-303.11": "P",  "3-303.12": "C",
+    "3-304.11": "P",  "3-304.12": "C",  "3-304.13": "C",  "3-304.14": "C",
+    "3-304.15": "P",  "3-304.16": "C",  "3-304.17": "P",
+    "3-305.11": "C",  "3-305.12": "Pf", "3-305.13": "C",  "3-305.14": "C",
+    "3-306.11": "P",  "3-306.12": "C",  "3-306.13": "P",  "3-306.14": "P",
+    "3-307.11": "C",
+    "3-401.11": "P",  "3-401.12": "P",  "3-401.13": "Pf", "3-401.14": "P",
+    "3-401.15": "P",  "3-402.11": "P",  "3-402.12": "Pf", "3-403.11": "P",
+    "3-404.11": "P",
+    "3-501.11": "C",  "3-501.12": "C",  "3-501.13": "Pf", "3-501.14": "P",
+    "3-501.15": "Pf", "3-501.16": "P",  "3-501.17": "Pf", "3-501.18": "P",
+    "3-501.19": "P",  "3-502.11": "Pf", "3-502.12": "P",
+    "3-601.11": "C",  "3-601.12": "C",  "3-602.11": "Pf", "3-602.12": "C",  "3-603.11": "Pf",
+    "3-701.11": "P",  "3-801.11": "P",
+    "4-101.11": "P",  "4-101.12": "C",  "4-101.13": "P",  "4-101.14": "P",
+    "4-101.15": "P",  "4-101.16": "C",  "4-101.17": "C",  "4-101.18": "C",
+    "4-101.19": "C",  "4-102.11": "P",  "4-201.11": "C",  "4-201.12": "P",
+    "4-202.11": "Pf", "4-202.12": "Pf", "4-202.13": "C",  "4-202.14": "C",
+    "4-202.15": "C",  "4-202.16": "C",  "4-202.17": "C",  "4-202.18": "C",
+    "4-203.11": "Pf", "4-203.12": "Pf", "4-203.13": "C",
+    "4-204.11": "C",  "4-204.110": "P", "4-204.111": "P", "4-204.113": "C",
+    "4-204.114": "C", "4-204.115": "Pf","4-204.116": "Pf","4-204.117": "Pf",
+    "4-204.118": "C", "4-204.119": "C", "4-204.12": "C",  "4-204.120": "C",
+    "4-204.121": "C", "4-204.122": "C", "4-204.123": "C", "4-204.13": "P",
+    "4-204.14": "C",  "4-204.15": "C",  "4-204.16": "C",  "4-204.17": "C",
+    "4-204.18": "C",  "4-204.19": "C",
+    "4-301.11": "Pf", "4-301.12": "Pf", "4-301.13": "C",  "4-301.14": "C",
+    "4-301.15": "C",  "4-302.11": "Pf", "4-302.12": "Pf", "4-302.13": "Pf",
+    "4-302.14": "Pf", "4-303.11": "Pf", "4-401.11": "Pf", "4-402.11": "C",  "4-402.12": "C",
+    "4-501.11": "C",  "4-501.110": "Pf","4-501.111": "P", "4-501.112": "Pf",
+    "4-501.113": "C", "4-501.114": "P",  "4-501.115": "C", "4-501.116": "Pf","4-501.12": "C",
+    "4-501.13": "C",  "4-501.14": "C",  "4-501.15": "C",  "4-501.16": "C",
+    "4-501.17": "Pf", "4-501.18": "C",  "4-501.19": "Pf",
+    "4-502.11": "Pf", "4-502.12": "P",  "4-502.13": "C",  "4-502.14": "C",
+    "4-601.11": "Pf", "4-602.11": "P",  "4-602.12": "C",  "4-602.13": "C",
+    "4-603.11": "C",  "4-603.12": "C",  "4-603.13": "C",  "4-603.14": "C",
+    "4-603.15": "C",  "4-603.16": "C",  "4-702.11": "P",  "4-703.11": "P",
+    "4-801.11": "C",  "4-802.11": "C",  "4-803.11": "C",  "4-803.12": "C",
+    "4-803.13": "C",  "4-901.11": "C",  "4-901.12": "C",  "4-902.11": "C",
+    "4-902.12": "C",  "4-903.11": "C",  "4-903.12": "Pf", "4-904.11": "C",  "4-904.12": "C",
+    "4-904.13": "C",  "4-904.14": "C",
+    "5-101.11": "P",  "5-101.12": "P",  "5-101.13": "P",
+    "5-102.11": "P",  "5-102.12": "P",  "5-102.13": "Pf", "5-102.14": "C",
+    "5-103.11": "Pf", "5-103.12": "Pf", "5-104.11": "Pf", "5-104.12": "Pf",
+    "5-201.11": "P",
+    "5-202.11": "P",  "5-202.12": "Pf", "5-202.13": "P",  "5-202.14": "P",
+    "5-202.15": "C",  "5-203.11": "Pf", "5-203.12": "C",  "5-203.13": "C",
+    "5-203.14": "P",  "5-203.15": "P",  "5-204.11": "Pf", "5-204.12": "C",
+    "5-204.13": "C",  "5-205.11": "Pf", "5-205.12": "P",  "5-205.13": "Pf",
+    "5-205.14": "P",  "5-205.15": "P",
+    "5-301.11": "P",  "5-302.11": "C",  "5-302.12": "C",  "5-302.13": "C",
+    "5-302.14": "C",  "5-302.15": "C",  "5-302.16": "P",  "5-303.11": "P",
+    "5-303.12": "C",  "5-303.13": "C",  "5-304.11": "P",  "5-304.12": "C",
+    "5-304.13": "C",  "5-304.14": "P",
+    "5-401.11": "C",  "5-402.11": "P",  "5-402.12": "C",  "5-402.13": "P",
+    "5-402.14": "Pf", "5-402.15": "C",  "5-403.11": "P",  "5-403.12": "C",
+    "5-501.11": "C",  "5-501.110": "C", "5-501.111": "C", "5-501.112": "C",
+    "5-501.113": "C", "5-501.114": "C", "5-501.115": "C", "5-501.116": "C",
+    "5-501.12": "C",  "5-501.13": "C",  "5-501.14": "C",  "5-501.15": "C",
+    "5-501.16": "C",  "5-501.17": "C",  "5-501.18": "C",  "5-501.19": "C",  "5-502.11": "C",
+    "5-502.12": "C",  "5-503.11": "C",
+    "6-101.11": "C",  "6-102.11": "C",
+    "6-201.11": "C",  "6-201.12": "C",  "6-201.13": "C",  "6-201.14": "C",
+    "6-201.15": "C",  "6-201.16": "C",  "6-201.17": "C",  "6-201.18": "C",
+    "6-202.11": "C",  "6-202.110": "C", "6-202.111": "P", "6-202.112": "C",
+    "6-202.12": "C",  "6-202.13": "C",  "6-202.14": "C",  "6-202.15": "C",
+    "6-202.16": "C",  "6-202.17": "C",  "6-202.18": "C",  "6-202.19": "C",
+    "6-301.11": "Pf", "6-301.12": "Pf", "6-301.13": "C",  "6-301.14": "C",
+    "6-302.11": "Pf", "6-303.11": "C",  "6-304.11": "C",  "6-305.11": "C",
+    "6-402.11": "C",  "6-403.11": "C",  "6-404.11": "Pf",
+    "6-501.11": "C",  "6-501.110": "C", "6-501.111": "Pf","6-501.112": "C",
+    "6-501.113": "C", "6-501.114": "C", "6-501.115": "Pf","6-501.12": "C",
+    "6-501.13": "C",  "6-501.14": "C",  "6-501.15": "Pf", "6-501.16": "C",
+    "6-501.17": "C",  "6-501.18": "C",  "6-501.19": "C",
+    "7-101.11": "Pf", "7-102.11": "Pf", "7-201.11": "P",  "7-202.11": "Pf",
+    "7-202.12": "P",  "7-203.11": "P",  "7-204.11": "P",  "7-204.12": "P",  "7-204.13": "P",
+    "7-204.14": "P",  "7-205.11": "P",  "7-206.11": "P",  "7-206.12": "P",
+    "7-206.13": "P",  "7-207.11": "P",  "7-207.12": "P",  "7-208.11": "P",
+    "7-209.11": "C",  "7-301.11": "P",
+    "8-103.11": "Pf", "8-103.12": "P",  "8-201.13": "C",  "8-201.14": "Pf",
+}
 
-
+# Fallback: item-number severity (used when HTML report has no parseable code sections)
+# Items not listed default to Core (weight 1)
+PRIORITY_ITEMS            = {4, 6, 8, 9, 11, 12, 13, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 26, 27, 28}
+PRIORITY_FOUNDATION_ITEMS = {1, 3, 5, 10, 14, 25, 29}
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -78,19 +177,44 @@ def parse_facility(item):
     }
 
 def violation_weight(violation_str):
+    """Fallback: weight by item number when code sections aren't available."""
     try:
-        code = int(violation_str.split(" - ")[0].strip())
-        if code in CRITICAL:            return 3
-        if code in PRIORITY_FOUNDATION: return 2
+        item = int(violation_str.split(" - ")[0].strip())
+        if item in PRIORITY_ITEMS:            return 3
+        if item in PRIORITY_FOUNDATION_ITEMS: return 2
         return 1
     except (ValueError, IndexError):
         return 1
 
-def score_inspection(violations_dict):
+def code_weight(code):
+    severity = CODE_SEVERITY.get(code)
+    if severity == "P":  return 3
+    if severity == "Pf": return 2
+    return 1
+
+def fetch_report_codes(printable_path):
+    """Fetch the HTML inspection report and return all FDA code sections cited."""
+    clean = re.sub(r'^\.\.?/', '', printable_path)
+    # Percent-encode characters that are invalid in URLs (spaces, quotes, backslashes, etc.)
+    # but leave the path structure and existing percent-encoding intact
+    safe = ''.join(c if c in 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&\'()*+,;=%' else urllib.parse.quote(c)
+                   for c in clean)
+    url = HTML_BASE + safe
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0", "Referer": HTML_BASE})
+    try:
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            html = resp.read().decode("utf-8", errors="replace")
+        return re.findall(r"Violation of Code:.*?([\d]+-[\d]+\.[\d]+)", html)
+    except Exception as e:
+        print(f"    Warning: Could not fetch HTML report: {e}")
+        return []
+
+def score_inspection(violations_dict, code_sections=None):
+    if code_sections:
+        return len(code_sections), sum(code_weight(c) for c in code_sections)
+    # Fallback: item-number classification
     items = [v[0] for v in violations_dict.values() if v and v[0]]
-    count = len(items)
-    score = sum(violation_weight(v) for v in items)
-    return count, score
+    return len(items), sum(violation_weight(v) for v in items)
 
 def get_inspection_scores(facility_id):
     url = INSPECTIONS.format(encode_id(facility_id))
@@ -98,8 +222,10 @@ def get_inspection_scores(facility_id):
         data = fetch_json(url)
         if not data:
             return 0, 0
-        count, score = score_inspection(data[0].get("violations", {}))
-        return count, score
+        insp = data[0]
+        pp = insp.get("printablePath", "")
+        codes = fetch_report_codes(pp) if pp else []
+        return score_inspection(insp.get("violations", {}), codes or None)
     except urllib.error.HTTPError as e:
         print(f"    Warning: HTTP {e.code} fetching violations for {facility_id}")
         return None, None
@@ -254,7 +380,7 @@ def backfill_scores(locations):
         if count is not None:
             loc["violation_count"] = count
             loc["risk_score"]      = score
-        time.sleep(0.35)
+        time.sleep(0.7)
 
         if i % 100 == 0 or i == len(missing):
             print(f"  {i}/{len(missing)} — saving checkpoint…")
@@ -295,9 +421,47 @@ def backfill_classification(locations):
     print("Phase 3 done.\n")
 
 
+# ── Phase 4: Reconcile (remove delisted locations) ────────────────────────────
+
+def reconcile(locations, by_id):
+    """Remove locations no longer present in the RI API (closed/delisted)."""
+    print("─── Phase 4: Reconciling against full API ───")
+
+    api_ids = set()
+    offset  = 0
+    while True:
+        try:
+            batch = fetch_json(FACILITIES.format(offset))
+        except Exception as e:
+            print(f"  Error at offset {offset}: {e} — aborting reconcile")
+            return
+        if not batch:
+            break
+        for item in batch:
+            api_ids.add(decode_id(item["id"]))
+        if offset % 100 == 0:
+            print(f"  Crawled {offset} pages ({len(api_ids)} IDs)…")
+        offset += 1
+        time.sleep(0.2)
+
+    removed = [loc for loc in locations if loc["id"] not in api_ids]
+    if not removed:
+        print(f"Phase 4 done: no delisted locations found ({len(api_ids)} active).\n")
+        return
+
+    for loc in removed:
+        print(f"  Removing: {loc['name']} (id={loc['id']}, last={loc.get('last_inspection')})")
+        locations.remove(loc)
+        by_id.pop(loc["id"], None)
+
+    print(f"Phase 4 done: removed {len(removed)} delisted location(s).\n")
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main():
+    reconcile_mode = "--reconcile" in sys.argv
+
     locations = json.loads(DATA_FILE.read_text())
     by_id     = {loc["id"]: loc for loc in locations}
     print(f"Loaded {len(locations)} locations from {DATA_FILE}\n")
@@ -305,6 +469,8 @@ def main():
     incremental_update(locations, by_id)
     backfill_scores(locations)
     backfill_classification(locations)
+    if reconcile_mode:
+        reconcile(locations, by_id)
 
     DATA_FILE.write_text(json.dumps(locations, indent=2))
     print(f"Saved {len(locations)} locations to {DATA_FILE}")
