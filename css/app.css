@@ -211,13 +211,14 @@ header p {
 }
 
 #about-panel {
+    display: block;
     flex: 1;
     overflow-y: auto;
     padding: 16px;
 }
 
 #about-panel[hidden] {
-    display: none;
+    display: none !important;
 }
 
 .about-content h2 {
@@ -409,7 +410,7 @@ header p {
 }
 
 .sidebar-body[hidden] {
-    display: none;
+    display: none !important;
 }
 
 .filter-group {
