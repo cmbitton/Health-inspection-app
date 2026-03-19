@@ -10,9 +10,6 @@ Uses the Google Places API (New) to look up each location and store:
 Only processes locations missing 'google_category' or restaurants missing 'cuisine'.
 Safe to interrupt and resume.
 
-Cost: $2.83 per 1,000 requests after 10,000 free/month.
-~6,700 total locations — within the free tier.
-
 Usage:
   GOOGLE_MAPS_KEY=your-key python3 scripts/fetch_cuisines.py
 """

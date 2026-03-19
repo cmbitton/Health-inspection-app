@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 """Simple dev server with CORS proxy for ri.healthinspections.us"""
 
+import gzip
 import http.server
+import io
+import mimetypes
+import os
 import urllib.request
 import urllib.error
 import time
@@ -54,7 +58,20 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(body)
         else:
-            super().do_GET()
+            # Serve static files with gzip if client supports it
+            path = self.translate_path(self.path)
+            if os.path.isfile(path) and 'gzip' in self.headers.get('Accept-Encoding', ''):
+                mime, _ = mimetypes.guess_type(path)
+                with open(path, 'rb') as f:
+                    data = gzip.compress(f.read(), compresslevel=6)
+                self.send_response(200)
+                self.send_header('Content-Type', mime or 'application/octet-stream')
+                self.send_header('Content-Encoding', 'gzip')
+                self.send_header('Content-Length', len(data))
+                self.end_headers()
+                self.wfile.write(data)
+            else:
+                super().do_GET()
 
     def log_message(self, fmt, *args):
         print(fmt % args)

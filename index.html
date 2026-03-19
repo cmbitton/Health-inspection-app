@@ -85,6 +85,13 @@
                     </svg>
                     <span class="tab-label">Filters<span class="tab-badge" id="filters-badge" hidden></span></span>
                 </button>
+                <button class="tab-btn" data-tab="about">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span class="tab-label">About</span>
+                </button>
             </div>
 
             <div id="filters-panel" hidden>
@@ -145,6 +152,28 @@
                             <button class="pill active" data-filter="cuisine" data-value="other">Other</button>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <div id="about-panel" hidden>
+                <div class="about-content">
+                    <h2>About InspectRI</h2>
+                    <p>InspectRI displays publicly available food inspection records for every licensed food establishment in Rhode Island, refreshed daily from the RI Department of Health.</p>
+
+                    <h3>How scores are calculated</h3>
+                    <p>Each location receives a score from 0 to 100 based on its most recent inspection. <strong>Higher is better</strong> — a score of 100 means no violations were found.</p>
+                    <p>Violations are weighted by severity using the <a href="https://www.fda.gov/food/fda-food-code/food-code-2022" target="_blank" rel="noopener">FDA Food Code 2022</a> — serious food safety violations count more than minor sanitation ones. The score and color reflect the most recent inspection only.</p>
+
+                    <h3>Data source</h3>
+                    <p>All inspection records are sourced from <a href="https://ri.healthinspections.us" target="_blank" rel="noopener">ri.healthinspections.us</a>, the RI Department of Health's public inspection portal. Scores and categories shown here are computed by this site and are not official RIDOH ratings.</p>
+
+                    <h3>Disclaimer</h3>
+                    <p>This site is an independent project and is <strong>not affiliated with or endorsed by</strong> the Rhode Island Department of Health (RIDOH) or any government agency. All data is sourced from public government records.</p>
+                    <p>Scores are computed representations of public inspection data and may be incomplete, delayed, or inaccurate. A high score does not guarantee food safety, and a low score does not mean a location is currently unsafe. Establishments may have been re-inspected, closed, or otherwise changed since the last data refresh.</p>
+                    <p>This information is provided for general informational purposes only. For official inspection records, visit <a href="https://ri.healthinspections.us" target="_blank" rel="noopener">ri.healthinspections.us</a>.</p>
+
+                    <h3>Open source</h3>
+                    <p>The source code for this project is publicly available on <a href="https://github.com/cmbitton/Health-inspection-app" target="_blank" rel="noopener">GitHub</a>.</p>
                 </div>
             </div>
 

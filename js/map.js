@@ -183,8 +183,19 @@ function applyFilters() {
         if (!match && markerCluster.hasLayer(marker)) markerCluster.removeLayer(marker);
     });
 
-    if (!q && document.querySelector('.tab-btn[data-tab="explore"]')?.classList.contains('active')) {
-        showExploreList();
+    if (!q) {
+        const exploreActive = document.querySelector('.tab-btn[data-tab="explore"]')?.classList.contains('active');
+        if (exploreActive) {
+            showExploreList();
+        } else {
+            // Update currentListFn so the back button reflects the new filter state,
+            // even if the explore list isn't currently visible.
+            const visible = allMarkers
+                .filter(m => markerCluster.hasLayer(m))
+                .map(m => m.locationData);
+            const title = `${visible.length} location${visible.length !== 1 ? 's' : ''}`;
+            currentListFn = () => renderLocationList(visible, title, { field: 'date', dir: 'desc' });
+        }
     }
 }
 
@@ -263,6 +274,7 @@ document.querySelectorAll('.pill').forEach(btn => {
 });
 
 const filtersPanel = document.getElementById('filters-panel');
+const aboutPanel   = document.getElementById('about-panel');
 const tabBtns      = document.querySelectorAll('.tab-btn');
 
 const PLACEHOLDER_HTML = `
@@ -279,8 +291,10 @@ const PLACEHOLDER_HTML = `
 function setActiveTab(tab, source = 'code') {
     tabBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tab));
     const showFilters = tab === 'filters';
+    const showAbout   = tab === 'about';
     filtersPanel.hidden = !showFilters;
-    sidebarBody.hidden = showFilters;
+    aboutPanel.hidden   = !showAbout;
+    sidebarBody.hidden  = showFilters || showAbout;
 
     if (tab === 'worst') {
         if (!worstOffendersActive) activateWorstOffenders();

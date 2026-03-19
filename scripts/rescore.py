@@ -49,7 +49,7 @@ def main():
             loc["score_method"]    = "code_section"
 
             if score != old_score:
-                method = f"{len(codes)} codes" if codes else "item fallback"
+                method = f"{len(codes)} codes" if codes else ("clean" if count == 0 else "item fallback")
                 print(f"  {loc['name']}: {old_score} → {score} ({method})")
                 changed += 1
 

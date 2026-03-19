@@ -49,7 +49,8 @@ API_HEADERS = {
 
 # ── Violation severity weights (FDA Food Code 2022) ───────────────────────────
 # Extracted from Annex 7 of the FDA Food Code 2022 PDF.
-# For codes with mixed subsection severities, highest is used (P > Pf > C).
+# Subsection-specific entries (e.g. "4-601.11(A)") take precedence over base entries.
+# code_weight() falls back to the base code if no subsection entry exists.
 # P = Priority (weight 3), Pf = Priority Foundation (weight 2), C = Core (weight 1)
 CODE_SEVERITY = {
     "2-101.11": "Pf", "2-102.11": "Pf", "2-102.12": "C",  "2-103.11": "Pf",
@@ -86,7 +87,7 @@ CODE_SEVERITY = {
     "4-202.11": "Pf", "4-202.12": "Pf", "4-202.13": "C",  "4-202.14": "C",
     "4-202.15": "C",  "4-202.16": "C",  "4-202.17": "C",  "4-202.18": "C",
     "4-203.11": "Pf", "4-203.12": "Pf", "4-203.13": "C",
-    "4-204.11": "C",  "4-204.110": "P", "4-204.111": "P", "4-204.113": "C",
+    "4-204.11": "C",  "4-204.110": "P", "4-204.111": "P", "4-204.112": "Pf", "4-204.113": "C",
     "4-204.114": "C", "4-204.115": "Pf","4-204.116": "Pf","4-204.117": "Pf",
     "4-204.118": "C", "4-204.119": "C", "4-204.12": "C",  "4-204.120": "C",
     "4-204.121": "C", "4-204.122": "C", "4-204.123": "C", "4-204.13": "P",
@@ -146,6 +147,18 @@ CODE_SEVERITY = {
     "7-206.13": "P",  "7-207.11": "P",  "7-207.12": "P",  "7-208.11": "P",
     "7-209.11": "C",  "7-301.11": "P",
     "8-103.11": "Pf", "8-103.12": "P",  "8-201.13": "C",  "8-201.14": "Pf",
+    # Subsection overrides — sections where (A)/(B)/(C)/... have different severity levels.
+    # Base entries above are kept at the highest severity as a fallback for unlettered citations.
+    "3-304.15(A)": "P",   "3-304.15(B)": "C",   "3-304.15(C)": "C",   "3-304.15(D)": "C",
+    "3-306.13(A)": "P",   "3-306.13(B)": "Pf",  "3-306.13(C)": "Pf",
+    "3-401.12(A)": "C",   "3-401.12(B)": "C",   "3-401.12(C)": "P",   "3-401.12(D)": "C",
+    "3-401.14(F)": "Pf",
+    "3-404.11(A)": "P",   "3-404.11(B)": "Pf",
+    "3-801.11(G)": "C",
+    "4-204.110(A)": "P",  "4-204.110(B)": "Pf",
+    "4-401.11(C)": "C",
+    "4-502.11(A)": "C",   "4-502.11(B)": "Pf",  "4-502.11(C)": "C",
+    "4-601.11(A)": "Pf",  "4-601.11(B)": "C",   "4-601.11(C)": "C",
 }
 
 # Fallback: item-number severity (used when HTML report has no parseable code sections)
@@ -188,6 +201,10 @@ def violation_weight(violation_str):
 
 def code_weight(code):
     severity = CODE_SEVERITY.get(code)
+    if severity is None:
+        # Fall back to base code (strip subsection letter e.g. "(A)")
+        base = re.sub(r'\([A-Z]\)$', '', code)
+        severity = CODE_SEVERITY.get(base)
     if severity == "P":  return 3
     if severity == "Pf": return 2
     return 1
@@ -204,7 +221,7 @@ def fetch_report_codes(printable_path):
     try:
         with urllib.request.urlopen(req, timeout=15) as resp:
             html = resp.read().decode("utf-8", errors="replace")
-        return re.findall(r"Violation of Code:.*?([\d]+-[\d]+\.[\d]+)", html)
+        return re.findall(r"Violation of Code:.*?([\d]+-[\d]+\.[\d]+(?:\([A-Z]\))?)", html)
     except Exception as e:
         print(f"    Warning: Could not fetch HTML report: {e}")
         return []
@@ -217,21 +234,29 @@ def score_inspection(violations_dict, code_sections=None):
     return len(items), sum(violation_weight(v) for v in items)
 
 def get_inspection_scores(facility_id):
+    """Return (count, score, insp_date) for the most recent inspection.
+
+    insp_date is a string like "03-18-2026" from the inspections API,
+    which is more reliable than the date returned by the facilities list API.
+    """
     url = INSPECTIONS.format(encode_id(facility_id))
     try:
         data = fetch_json(url)
         if not data:
-            return 0, 0
+            return 0, 0, None
         insp = data[0]
+        raw_date = insp.get("columns", {}).get("0", "")
+        insp_date = raw_date.replace("Inspection Date:", "").strip() or None
         pp = insp.get("printablePath", "")
         codes = fetch_report_codes(pp) if pp else []
-        return score_inspection(insp.get("violations", {}), codes or None)
+        count, score = score_inspection(insp.get("violations", {}), codes or None)
+        return count, score, insp_date
     except urllib.error.HTTPError as e:
         print(f"    Warning: HTTP {e.code} fetching violations for {facility_id}")
-        return None, None
+        return None, None, None
     except Exception as e:
         print(f"    Warning: {e}")
-        return None, None
+        return None, None, None
 
 def geocode(address):
     query = urllib.parse.quote(address)
@@ -328,8 +353,8 @@ def incremental_update(locations, by_id):
 
             if existing:
                 print(f"  Updated: {fac['name']} ({fac['last_inspection']})")
-                count, score = get_inspection_scores(fac["id"])
-                existing["last_inspection"] = fac["last_inspection"]
+                count, score, insp_date = get_inspection_scores(fac["id"])
+                existing["last_inspection"] = insp_date or fac["last_inspection"]
                 if count is not None:
                     existing["violation_count"] = count
                     existing["risk_score"]      = score
@@ -338,11 +363,13 @@ def incremental_update(locations, by_id):
                 print(f"  New:     {fac['name']}")
                 lat, lng = geocode(fac["address"])
                 time.sleep(0.05)
-                count, score = get_inspection_scores(fac["id"])
+                count, score, insp_date = get_inspection_scores(fac["id"])
                 fac["lat"]              = lat
                 fac["lng"]              = lng
                 fac["violation_count"]  = count if count is not None else 0
                 fac["risk_score"]       = score if score is not None else 0
+                if insp_date:
+                    fac["last_inspection"] = insp_date
 
                 types = fetch_place_types(fac["name"], fac["address"])
                 if types is not None:
@@ -376,10 +403,12 @@ def backfill_scores(locations):
     print(f"─── Phase 2: Backfilling scores for {len(missing)} locations ───")
 
     for i, loc in enumerate(missing, 1):
-        count, score = get_inspection_scores(loc["id"])
+        count, score, insp_date = get_inspection_scores(loc["id"])
         if count is not None:
             loc["violation_count"] = count
             loc["risk_score"]      = score
+        if insp_date:
+            loc["last_inspection"] = insp_date
         time.sleep(0.7)
 
         if i % 100 == 0 or i == len(missing):
