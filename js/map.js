@@ -70,7 +70,9 @@ function createMarker(loc) {
 
     marker.on('click', () => {
         setSidebarCollapsed(false);
+        const savedListFn = worstOffendersActive ? () => setActiveTab('worst', 'user') : currentListFn;
         setActiveTab('explore');
+        currentListFn = savedListFn;
         if (activeMarker && activeMarker !== marker) {
             activeMarker.setStyle(markerStyle(activeMarker.locationData));
         }
@@ -327,7 +329,9 @@ searchInput.addEventListener('input', () => {
 
 function flyToLocation(loc) {
     setSidebarCollapsed(false);
+    const savedListFn = worstOffendersActive ? () => setActiveTab('worst', 'user') : currentListFn;
     setActiveTab('explore');
+    currentListFn = savedListFn;
     map.setView([loc.lat, loc.lng], 16);
     const marker = allMarkers.find(m => String(m.locationData.id) === String(loc.id));
     if (marker) {
