@@ -30,11 +30,13 @@ sys.path.insert(0, str(Path(__file__).parent))
 from place_types import CATEGORY_TYPE_MAP, CUISINE_TYPE_MAP  # noqa: E402
 
 DATA_FILE   = Path(__file__).parent.parent / "data" / "locations.json"
-FACILITIES  = "https://ri.healthinspections.us/ri/API/index.cfm/facilities/{}/0"
 INSPECTIONS = "https://ri.healthinspections.us/ri/API/index.cfm/inspectionsData/{}"
+SEARCH_URL  = "https://ri.healthinspections.us/ri/API/index.cfm/search/{}/{}"
 GEOCODE_URL = "https://maps.googleapis.com/maps/api/geocode/json?address={}&key={}"
 PLACES_URL  = "https://places.googleapis.com/v1/places:searchText"
 HTML_BASE   = "https://ri.healthinspections.us/"
+
+LOOKBACK_DAYS = 4  # how many days back to search for updated inspections
 
 GOOGLE_KEY = os.environ.get("GOOGLE_MAPS_KEY")
 if not GOOGLE_KEY:
@@ -335,34 +337,52 @@ def classify(loc, types):
 
 # ── Phase 1: Incremental update ───────────────────────────────────────────────
 
+def search_by_date(from_str, to_str, page):
+    """One page of facilities whose last inspection falls in [from_str, to_str].
+
+    Dates are MM/DD/YYYY.  The portal JS replaces literal '/' with '%2F' inside
+    the JSON string before embedding it in the URL path, so we do the same.
+    """
+    json_obj = {
+        "keyword": base64.b64encode(b"").decode(),
+        "from":    base64.b64encode(from_str.encode()).decode(),
+        "to":      base64.b64encode(to_str.encode()).decode(),
+    }
+    json_str = json.dumps(json_obj).replace("/", "%2F")
+    url = SEARCH_URL.format(urllib.parse.quote(json_str), page)
+    return fetch_json(url)
+
+
 def incremental_update(locations, by_id):
+    from datetime import date, timedelta
+
+    today     = date.today()
+    from_date = today - timedelta(days=LOOKBACK_DAYS)
+    from_str  = from_date.strftime("%m/%d/%Y")
+    to_str    = today.strftime("%m/%d/%Y")
+
     updated_count = 0
     added_count   = 0
-    offset        = 0
 
-    print("─── Phase 1: Incremental update ───")
+    print(f"─── Phase 1: Incremental update ({from_str} – {to_str}) ───")
 
+    page = 0
     while True:
-        url = FACILITIES.format(offset)
         try:
-            batch = fetch_json(url)
+            batch = search_by_date(from_str, to_str, page)
         except Exception as e:
-            print(f"Error at offset {offset}: {e}")
+            print(f"Error at page {page}: {e}")
             break
 
         if not batch:
-            print("Reached end of API.")
             break
 
-        all_current = True
         for item in batch:
             fac      = parse_facility(item)
             existing = by_id.get(fac["id"])
 
             if existing and existing.get("last_inspection") == fac["last_inspection"]:
                 continue  # already up to date
-
-            all_current = False
 
             if existing:
                 print(f"  Updated: {fac['name']} ({fac['last_inspection']})")
@@ -395,11 +415,7 @@ def incremental_update(locations, by_id):
 
             time.sleep(0.4)
 
-        if all_current:
-            print(f"Full page current at offset {offset} — stopping.")
-            break
-
-        offset += 1
+        page += 1
         time.sleep(0.4)
 
     print(f"Phase 1 done: {updated_count} updated, {added_count} added.\n")
@@ -499,10 +515,49 @@ def reconcile(locations, by_id):
     print(f"Phase 4 done: removed {len(removed)} delisted location(s).\n")
 
 
+# ── Phase 5: Full rescan ──────────────────────────────────────────────────────
+
+def full_rescan(locations):
+    """Check inspectionsData for every facility and update if the API has a newer date.
+
+    Run once with --rescan to fix historically stale entries that the incremental
+    update missed because the facilities search API never surfaced them.
+    """
+    from datetime import datetime
+
+    def parse_date(s):
+        try:    return datetime.strptime(s, "%m-%d-%Y")
+        except: return None
+
+    print(f"─── Phase 5: Full rescan ({len(locations)} facilities) ───")
+    updated = 0
+
+    for i, loc in enumerate(locations, 1):
+        count, score, insp_date = get_inspection_scores(loc["id"])
+        if insp_date:
+            api_d    = parse_date(insp_date)
+            stored_d = parse_date(loc.get("last_inspection", ""))
+            if api_d and stored_d and api_d > stored_d:
+                print(f"  Updated: {loc['name']} ({loc['last_inspection']} → {insp_date})")
+                loc["last_inspection"] = insp_date
+                if count is not None:
+                    loc["violation_count"] = count
+                    loc["risk_score"]      = score
+                updated += 1
+        time.sleep(0.5)
+
+        if i % 100 == 0 or i == len(locations):
+            print(f"  {i}/{len(locations)} checked ({updated} updated) — saving checkpoint…")
+            DATA_FILE.write_text(json.dumps(locations, indent=2))
+
+    print(f"Phase 5 done: {updated} updated.\n")
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main():
     reconcile_mode = "--reconcile" in sys.argv
+    rescan_mode    = "--rescan"    in sys.argv
 
     locations = json.loads(DATA_FILE.read_text())
     by_id     = {loc["id"]: loc for loc in locations}
@@ -511,6 +566,8 @@ def main():
     incremental_update(locations, by_id)
     backfill_scores(locations)
     backfill_classification(locations)
+    if rescan_mode:
+        full_rescan(locations)
     if reconcile_mode:
         reconcile(locations, by_id)
 
