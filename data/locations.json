@@ -84809,5 +84809,93 @@
     "risk_score": 0,
     "google_category": "restaurant",
     "cuisine": "other"
+  },
+  {
+    "id": "257938",
+    "name": "WEST END COMMUNITY CENTER INC",
+    "address": "109 BUCKLIN STREET PROVIDENCE RI 02907",
+    "last_inspection": "03-25-2026",
+    "license_type": "Food Service (Non-Profit)",
+    "lat": 41.8044214,
+    "lng": -71.4285086,
+    "violation_count": 3,
+    "risk_score": 4,
+    "google_category": "other"
+  },
+  {
+    "id": "937429",
+    "name": "MRS MOMO SUSHI",
+    "address": "120 LAMBERT LIND HWY WARWICK RI 02886",
+    "last_inspection": "03-25-2026",
+    "license_type": "Seats - 50 or More",
+    "lat": 41.7288516,
+    "lng": -71.4760132,
+    "violation_count": 1,
+    "risk_score": 3,
+    "google_category": "restaurant",
+    "cuisine": "other"
+  },
+  {
+    "id": "939404",
+    "name": "KAWFEE",
+    "address": "56 PRESTON DR NORTH KINGSTOWN RI 02852",
+    "last_inspection": "03-25-2026",
+    "license_type": "Mobile Food Service",
+    "lat": 41.5662507,
+    "lng": -71.465859,
+    "violation_count": 0,
+    "risk_score": 0,
+    "google_category": "restaurant",
+    "cuisine": "breakfast"
+  },
+  {
+    "id": "663033",
+    "name": "M AND T SUPERMARKET LLC",
+    "address": "1059 BROAD ST PROVIDENCE RI 02905",
+    "last_inspection": "03-24-2026",
+    "license_type": "Cash Registers - 1-2",
+    "lat": 41.7960031,
+    "lng": -71.4122716,
+    "violation_count": 3,
+    "risk_score": 7,
+    "google_category": "grocery"
+  },
+  {
+    "id": "938268",
+    "name": "HEIWA TOFU",
+    "address": "HEIWA TOFU ROCKPORT ME 04856",
+    "last_inspection": "03-24-2026",
+    "license_type": "Mobile Food Service",
+    "lat": 44.1868845,
+    "lng": -69.0961745,
+    "violation_count": 0,
+    "risk_score": 0,
+    "google_category": "grocery"
+  },
+  {
+    "id": "939359",
+    "name": "SUPREME PIZZA AND SUBS",
+    "address": "2706 S COUNTY TRAIL EAST GREENWICH RI 02818",
+    "last_inspection": "03-24-2026",
+    "license_type": "Seats -  Less than 50",
+    "lat": 41.62288849999999,
+    "lng": -71.4914082,
+    "violation_count": 2,
+    "risk_score": 4,
+    "google_category": "restaurant",
+    "cuisine": "pizza"
+  },
+  {
+    "id": "939365",
+    "name": "THE JUICE GIRL",
+    "address": "1800 MENDON RD CUMBERLAND RI 02864",
+    "last_inspection": "03-23-2026",
+    "license_type": "Bottler Canner (Not-Water) In-State",
+    "lat": 41.94528409999999,
+    "lng": -71.43837789999999,
+    "violation_count": 0,
+    "risk_score": 0,
+    "google_category": "restaurant",
+    "cuisine": "breakfast"
   }
 ]
