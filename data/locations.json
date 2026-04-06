@@ -60226,12 +60226,12 @@
     "id": "771352",
     "name": "NEWPORT BLUES CAFE",
     "address": "286 THAMES ST NEWPORT RI 02840",
-    "last_inspection": "03-24-2025",
+    "last_inspection": "04-02-2026",
     "license_type": "Seats - 50 or More",
     "lat": 41.48568580000001,
     "lng": -71.3146173,
-    "violation_count": 0,
-    "risk_score": 0,
+    "violation_count": 3,
+    "risk_score": 7,
     "cuisine": "bar",
     "google_category": "restaurant"
   },
@@ -69533,12 +69533,12 @@
     "id": "937834",
     "name": "SUPER DRAGON CHINESE RESTAURANT",
     "address": "805 BROADWAY  PAWTUCKET RI 02861",
-    "last_inspection": "12-19-2024",
+    "last_inspection": "04-02-2026",
     "license_type": "Seats -  Less than 50",
     "lat": 41.8946719,
     "lng": -71.3709171,
-    "violation_count": 4,
-    "risk_score": 7,
+    "violation_count": 6,
+    "risk_score": 6,
     "cuisine": "chinese",
     "google_category": "restaurant"
   },
@@ -85110,5 +85110,31 @@
     "risk_score": 3,
     "google_category": "restaurant",
     "cuisine": "indian"
+  },
+  {
+    "id": "939177",
+    "name": "SAINT'S CAFE",
+    "address": "49 WESTFIELD STREET PROVIDENCE RI 02907",
+    "last_inspection": "04-02-2026",
+    "license_type": "Seats -  Less than 50",
+    "lat": 41.8104295,
+    "lng": -71.4266896,
+    "violation_count": 2,
+    "risk_score": 2,
+    "google_category": "restaurant",
+    "cuisine": "other"
+  },
+  {
+    "id": "939298",
+    "name": "BLOOM PATISSERIE ",
+    "address": "751 WEST SHORE RD WARWICK RI 02889",
+    "last_inspection": "04-02-2026",
+    "license_type": "Seats -  Less than 50",
+    "lat": 41.7239325,
+    "lng": -71.3828328,
+    "violation_count": 2,
+    "risk_score": 2,
+    "google_category": "restaurant",
+    "cuisine": "breakfast"
   }
 ]
