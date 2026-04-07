@@ -481,25 +481,43 @@ def backfill_classification(locations):
 
 # ── Phase 4: Reconcile (remove delisted locations) ────────────────────────────
 
-def reconcile(locations, by_id):
+def reconcile(locations, by_id, dry_run=False):
     """Remove locations no longer present in the RI API (closed/delisted)."""
-    print("─── Phase 4: Reconciling against full API ───")
+    label = "DRY RUN — " if dry_run else ""
+    print(f"─── Phase 4: {label}Reconciling against full API ───")
 
+    # Use a wide date range to pull all active facilities via the search API
     api_ids = set()
-    offset  = 0
+    page    = 0
+    retries = 0
+    consecutive_empty = 0
+    max_retries = 3
     while True:
         try:
-            batch = fetch_json(FACILITIES.format(offset))
+            batch = search_by_date("01/01/2015", "12/31/2099", page)
+            retries = 0  # reset on success
+            consecutive_empty = 0
         except Exception as e:
-            print(f"  Error at offset {offset}: {e} — aborting reconcile")
-            return
+            retries += 1
+            if retries <= max_retries:
+                print(f"  Retry {retries}/{max_retries} for page {page}: {e}")
+                time.sleep(2 * retries)
+                continue
+            print(f"  Skipping page {page} after {max_retries} retries: {e}")
+            retries = 0
+            page += 1
+            time.sleep(0.5)
+            consecutive_empty += 1
+            if consecutive_empty >= 5:
+                break
+            continue
         if not batch:
             break
         for item in batch:
             api_ids.add(decode_id(item["id"]))
-        if offset % 100 == 0:
-            print(f"  Crawled {offset} pages ({len(api_ids)} IDs)…")
-        offset += 1
+        if page % 100 == 0:
+            print(f"  Crawled {page} pages ({len(api_ids)} IDs)…")
+        page += 1
         time.sleep(0.2)
 
     removed = [loc for loc in locations if loc["id"] not in api_ids]
@@ -508,11 +526,14 @@ def reconcile(locations, by_id):
         return
 
     for loc in removed:
-        print(f"  Removing: {loc['name']} (id={loc['id']}, last={loc.get('last_inspection')})")
-        locations.remove(loc)
-        by_id.pop(loc["id"], None)
+        prefix = "  Would remove:" if dry_run else "  Removing:"
+        print(f"{prefix} {loc['name']} (id={loc['id']}, last={loc.get('last_inspection')})")
+        if not dry_run:
+            locations.remove(loc)
+            by_id.pop(loc["id"], None)
 
-    print(f"Phase 4 done: removed {len(removed)} delisted location(s).\n")
+    verb = "would remove" if dry_run else "removed"
+    print(f"Phase 4 done: {verb} {len(removed)} delisted location(s).\n")
 
 
 # ── Phase 5: Full rescan ──────────────────────────────────────────────────────
@@ -558,6 +579,7 @@ def full_rescan(locations):
 def main():
     reconcile_mode = "--reconcile" in sys.argv
     rescan_mode    = "--rescan"    in sys.argv
+    dry_run        = "--dry-run"   in sys.argv
 
     locations = json.loads(DATA_FILE.read_text())
     by_id     = {loc["id"]: loc for loc in locations}
@@ -569,7 +591,7 @@ def main():
     if rescan_mode:
         full_rescan(locations)
     if reconcile_mode:
-        reconcile(locations, by_id)
+        reconcile(locations, by_id, dry_run=dry_run)
 
     DATA_FILE.write_text(json.dumps(locations, indent=2))
     print(f"Saved {len(locations)} locations to {DATA_FILE}")

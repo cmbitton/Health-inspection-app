@@ -9134,19 +9134,6 @@
     "google_category": "restaurant"
   },
   {
-    "id": "857311",
-    "name": "RITUAL CAFE",
-    "address": "2028 WARWICK AVE WARWICK RI 02889",
-    "last_inspection": "01-21-2026",
-    "license_type": "Seats -  Less than 50",
-    "lat": 41.7213355,
-    "lng": -71.4036897,
-    "violation_count": 0,
-    "risk_score": 0,
-    "cuisine": "breakfast",
-    "google_category": "restaurant"
-  },
-  {
     "id": "866093",
     "name": "THE THIRSTY BEAVER",
     "address": "80 FRENCHTOWN ROAD NORTH KINGSTOWN RI 02852",
@@ -15970,19 +15957,6 @@
     "google_category": "other"
   },
   {
-    "id": "265938",
-    "name": "TONG PHOON RESTAURANT",
-    "address": "382 THAMES ST NORTH BRISTOL RI 02809",
-    "last_inspection": "12-04-2025",
-    "license_type": "Seats -  Less than 50",
-    "lat": 41.6722396,
-    "lng": -71.27833760000001,
-    "violation_count": 3,
-    "risk_score": 5,
-    "cuisine": "thai",
-    "google_category": "restaurant"
-  },
-  {
     "id": "771467",
     "name": "NEAPOLIS FOOD EMPORIUM",
     "address": "60 S COUNTY COMMONS WAY NO G1 WAKEFIELD RI 02879",
@@ -20432,19 +20406,6 @@
     "cuisine": "bar"
   },
   {
-    "id": "939054",
-    "name": "BIRD IN HAND",
-    "address": "12 CANAL STREET WESTERLY RI 02891",
-    "last_inspection": "11-12-2025",
-    "license_type": "Mobile Food Service",
-    "lat": 41.38032140000001,
-    "lng": -71.83077759999999,
-    "violation_count": 0,
-    "risk_score": 0,
-    "google_category": "restaurant",
-    "cuisine": "other"
-  },
-  {
     "id": "939055",
     "name": "STONINGTON FARMS SHELLFISH",
     "address": "37 ROSELEAH DR MYSTIC CT 06355",
@@ -21631,19 +21592,6 @@
     "id": "938967",
     "name": "SWEET CURIOSITY",
     "address": "40 SOUTH MAIN STREET WOONSOCKET RI 02895",
-    "last_inspection": "11-05-2025",
-    "license_type": "Caterer or Commissary",
-    "lat": 41.9993439,
-    "lng": -71.5161759,
-    "violation_count": 0,
-    "risk_score": 0,
-    "google_category": "restaurant",
-    "cuisine": "bar"
-  },
-  {
-    "id": "938987",
-    "name": "NIBBLE AND GRAZE",
-    "address": "40 S MAIN ST WOONSOCKET RI 02895",
     "last_inspection": "11-05-2025",
     "license_type": "Caterer or Commissary",
     "lat": 41.9993439,
@@ -30334,19 +30282,6 @@
     "cuisine": "other"
   },
   {
-    "id": "714157",
-    "name": "SUPREME PIZZA AND SUBS",
-    "address": "2706 S COUNTY TRAIL EAST GREENWICH RI 02818",
-    "last_inspection": "09-24-2025",
-    "license_type": "Seats -  Less than 50",
-    "lat": 41.62288849999999,
-    "lng": -71.4914082,
-    "violation_count": 2,
-    "risk_score": 4,
-    "cuisine": "pizza",
-    "google_category": "restaurant"
-  },
-  {
     "id": "770802",
     "name": "CLOUDKITCHENS",
     "address": "65 BATH STREET PROVIDENCE RI 02908",
@@ -31184,19 +31119,6 @@
     "risk_score": 3,
     "cuisine": "breakfast",
     "google_category": "restaurant"
-  },
-  {
-    "id": "865797",
-    "name": "BIRD IN HAND",
-    "address": "12 CANAL STREET WESTERLY RI 02891",
-    "last_inspection": "09-18-2025",
-    "license_type": "Seats -  Less than 50",
-    "lat": 41.38032140000001,
-    "lng": -71.83077759999999,
-    "violation_count": 1,
-    "risk_score": 1,
-    "google_category": "restaurant",
-    "cuisine": "other"
   },
   {
     "id": "866001",
@@ -33169,18 +33091,6 @@
     "risk_score": 11,
     "cuisine": "japanese",
     "google_category": "restaurant"
-  },
-  {
-    "id": "265031",
-    "name": "DEXTER MARKET LLC",
-    "address": "874 DEXTER ST CENTRAL FALLS RI 02863",
-    "last_inspection": "09-09-2025",
-    "license_type": "Cash Registers - 1-2",
-    "lat": 41.8885145,
-    "lng": -71.3990091,
-    "violation_count": 2,
-    "risk_score": 2,
-    "google_category": "other"
   },
   {
     "id": "265949",
@@ -37734,19 +37644,6 @@
     "risk_score": 10,
     "cuisine": "bar",
     "google_category": "restaurant"
-  },
-  {
-    "id": "938467",
-    "name": "MATUNUCK OYSTER BAR",
-    "address": "203 MAIN ST SOUTH KINGSTOWN RI 02879",
-    "last_inspection": "08-15-2025",
-    "license_type": "Caterer or Commissary",
-    "lat": 41.4409444,
-    "lng": -71.49585450000001,
-    "violation_count": 1,
-    "risk_score": 3,
-    "google_category": "restaurant",
-    "cuisine": "seafood"
   },
   {
     "id": "938589",
@@ -48659,19 +48556,6 @@
     "google_category": "restaurant"
   },
   {
-    "id": "790384",
-    "name": "WARREN FAMILY FUN CENTER LLC",
-    "address": "326 MARKET ST WARREN RI 02885",
-    "last_inspection": "06-04-2025",
-    "license_type": "Seats -  Less than 50",
-    "lat": 41.7417897,
-    "lng": -71.2739781,
-    "violation_count": 2,
-    "risk_score": 4,
-    "google_category": "other",
-    "cuisine": "other"
-  },
-  {
     "id": "857102",
     "name": "BECKYS ICE CREAM COMPANY D/B/A FRENCHYS POPCORN",
     "address": "1000 ELMWOOD AVE PROVIDENCE RI 02907",
@@ -50785,19 +50669,6 @@
     "risk_score": 2,
     "google_category": "restaurant",
     "cuisine": "other"
-  },
-  {
-    "id": "866552",
-    "name": "KINNERA INDIAN RESTAURANT",
-    "address": "259 FRONT STREET LINCOLN RI 02865",
-    "last_inspection": "05-21-2025",
-    "license_type": "Caterer or Commissary",
-    "lat": 41.9041539,
-    "lng": -71.4102604,
-    "violation_count": 2,
-    "risk_score": 3,
-    "google_category": "restaurant",
-    "cuisine": "indian"
   },
   {
     "id": "936613",
@@ -58770,19 +58641,6 @@
     "google_category": "restaurant"
   },
   {
-    "id": "937715",
-    "name": "LATINOS FRIED CHICKEN",
-    "address": "830 BROAD STREET CENTRAL FALLS RI 02863",
-    "last_inspection": "04-02-2025",
-    "license_type": "Seats -  Less than 50",
-    "lat": 41.8912335,
-    "lng": -71.3875711,
-    "violation_count": 2,
-    "risk_score": 2,
-    "google_category": "restaurant",
-    "cuisine": "other"
-  },
-  {
     "id": "937879",
     "name": "SIMHA INDIAN KITCHEN + BAR",
     "address": "385 WESTMINSTER STREET PROVIDENCE RI 02903",
@@ -60423,19 +60281,6 @@
     "violation_count": 0,
     "risk_score": 0,
     "google_category": "other"
-  },
-  {
-    "id": "938154",
-    "name": "THE HUMBLE SWAN",
-    "address": "2941 PAWTUCKET AVE RIVERSIDE RI 02915",
-    "last_inspection": "03-21-2025",
-    "license_type": "Cottage Food Manufacture",
-    "lat": 41.79382990000001,
-    "lng": -71.3651074,
-    "violation_count": 0,
-    "risk_score": 0,
-    "google_category": "restaurant",
-    "cuisine": "breakfast"
   },
   {
     "id": "238969",
@@ -62234,19 +62079,6 @@
     "cuisine": "breakfast"
   },
   {
-    "id": "938085",
-    "name": "TOMATO FISH CO.",
-    "address": "55 DORRANCE ST PROVIDENCE RI 02903",
-    "last_inspection": "03-05-2025",
-    "license_type": "Cottage Food Manufacture",
-    "lat": 41.8237195,
-    "lng": -71.4120772,
-    "violation_count": 0,
-    "risk_score": 0,
-    "google_category": "restaurant",
-    "cuisine": "american"
-  },
-  {
     "id": "243502",
     "name": "SODEXO MGT INC AT PELL CENTER CATERING",
     "address": "BELLVUE AVENUE NEWPORT RI 02840",
@@ -62831,18 +62663,6 @@
     "cuisine": "other"
   },
   {
-    "id": "865869",
-    "name": "COMMUNITY CARE ALLIANCE",
-    "address": "600 SOCIAL STREET WOONSOCKET RI 02895",
-    "last_inspection": "02-26-2025",
-    "license_type": "Food Service (Non-Profit)",
-    "lat": 42.0094043,
-    "lng": -71.5033603,
-    "violation_count": 0,
-    "risk_score": 0,
-    "google_category": "healthcare"
-  },
-  {
     "id": "865870",
     "name": "OXFORD TAVERN",
     "address": "286 MAPLE AVENUE BARRINGTON RI 02806",
@@ -63321,19 +63141,6 @@
     "violation_count": 3,
     "risk_score": 5,
     "cuisine": "pizza",
-    "google_category": "restaurant"
-  },
-  {
-    "id": "413657",
-    "name": "WONGS KITCHEN",
-    "address": "108 WATERMAN ST PROVIDENCE RI 02906",
-    "last_inspection": "02-20-2025",
-    "license_type": "Seats -  Less than 50",
-    "lat": 41.8275741,
-    "lng": -71.40001810000001,
-    "violation_count": 2,
-    "risk_score": 2,
-    "cuisine": "chinese",
     "google_category": "restaurant"
   },
   {
@@ -67745,19 +67552,6 @@
     "risk_score": 2,
     "google_category": "restaurant",
     "cuisine": "other"
-  },
-  {
-    "id": "937774",
-    "name": "NEW ICHIBAN",
-    "address": "146 GANSETT AVE CRANSTON RI 02910",
-    "last_inspection": "01-21-2025",
-    "license_type": "Seats -  Less than 50",
-    "lat": 41.7860856,
-    "lng": -71.4512081,
-    "violation_count": 6,
-    "risk_score": 9,
-    "cuisine": "japanese",
-    "google_category": "restaurant"
   },
   {
     "id": "937816",
@@ -80056,18 +79850,6 @@
     "google_category": "school"
   },
   {
-    "id": "937021",
-    "name": "MINI INDULGENCES BAKERY",
-    "address": "95 NATE WHIPPLE HWY CUMBERLAND RI 02864",
-    "last_inspection": "03-27-2024",
-    "license_type": "Cottage Food Manufacture",
-    "lat": 41.9780232,
-    "lng": -71.4513083,
-    "violation_count": 0,
-    "risk_score": 0,
-    "google_category": "other"
-  },
-  {
     "id": "258758",
     "name": "LIGUORIS MARKET",
     "address": "46 PIERCE STREET WESTERLY RI 02891",
@@ -82850,19 +82632,6 @@
     "google_category": "other"
   },
   {
-    "id": "866421",
-    "name": "EL TABLASO RESTAURANT",
-    "address": "1323 BROAD STREET PROVIDENCE RI 02905",
-    "last_inspection": "09-22-2023",
-    "license_type": "Seats -  Less than 50",
-    "lat": 41.7905243,
-    "lng": -71.4058232,
-    "violation_count": 27,
-    "risk_score": 38,
-    "cuisine": "pizza",
-    "google_category": "restaurant"
-  },
-  {
     "id": "866258",
     "name": "A TASTE OF CENTRAL FALLS (FOOD TRUCK)",
     "address": "949 DEXTER STREET CUMBERLAND RI 02864",
@@ -84394,155 +84163,6 @@
     "risk_score": 1,
     "google_category": "restaurant",
     "cuisine": "breakfast"
-  },
-  {
-    "id": "262505",
-    "name": "WINGS OVER PROVIDENCE",
-    "address": "725 HOPE ST PROVIDENCE RI 02906",
-    "last_inspection": "04-07-2023",
-    "license_type": "Seats -  Less than 50",
-    "lat": 41.846559,
-    "lng": -71.39603319999999,
-    "violation_count": 6,
-    "risk_score": 8,
-    "cuisine": "american",
-    "google_category": "restaurant"
-  },
-  {
-    "id": "662657",
-    "name": "RHODE ISLAND YUMMY",
-    "address": "724 CRANSTON ST PROVIDENCE RI 02907",
-    "last_inspection": "04-05-2023",
-    "license_type": "Seats -  Less than 50",
-    "lat": 41.8047274,
-    "lng": -71.4379516,
-    "violation_count": 4,
-    "risk_score": 5,
-    "google_category": "restaurant",
-    "cuisine": "other"
-  },
-  {
-    "id": "865792",
-    "name": "CASA TEQUILA MEXICAN RESTAURANT",
-    "address": "559 CRANSTON STREET PROVIDENCE RI 02907",
-    "last_inspection": "04-05-2023",
-    "license_type": "Seats -  Less than 50",
-    "lat": 41.8082485,
-    "lng": -71.4350923,
-    "violation_count": 2,
-    "risk_score": 3,
-    "cuisine": "mexican",
-    "google_category": "restaurant"
-  },
-  {
-    "id": "865860",
-    "name": "THE SNACK BAR",
-    "address": "223 DAHLIA DRIVE NORTH KINGSTOWN RI 02852",
-    "last_inspection": "04-03-2023",
-    "license_type": "Mobile Food Service",
-    "lat": 41.61751599999999,
-    "lng": -71.4484998,
-    "violation_count": 0,
-    "risk_score": 0,
-    "google_category": "restaurant",
-    "cuisine": "breakfast"
-  },
-  {
-    "id": "865614",
-    "name": "HECTOR MARINA FOOD TRUCK",
-    "address": "NONE UNKNOWN NA 00000",
-    "last_inspection": "03-31-2023",
-    "license_type": "Mobile Food Service",
-    "violation_count": 0,
-    "risk_score": 0,
-    "google_category": "caterer"
-  },
-  {
-    "id": "612530",
-    "name": "WALGREENS NO 19470",
-    "address": "677 MAIN RD TIVERTON RI 02878",
-    "last_inspection": "03-30-2023",
-    "license_type": "Cash Registers - 6 or more",
-    "lat": 41.6556708,
-    "lng": -71.1955976,
-    "violation_count": 1,
-    "risk_score": 1,
-    "google_category": "grocery"
-  },
-  {
-    "id": "865873",
-    "name": "DAIRY KING",
-    "address": "472 CRANSTON STREET PROVIDENCE RI 02907",
-    "last_inspection": "03-29-2023",
-    "license_type": "Seats -  Less than 50",
-    "lat": 41.8100538,
-    "lng": -71.4328282,
-    "violation_count": 1,
-    "risk_score": 1,
-    "google_category": "restaurant",
-    "cuisine": "other"
-  },
-  {
-    "id": "865842",
-    "name": "BOLD VENTURES LLC",
-    "address": "222 WILLIAMS STREET PROVIDENCE RI 02906",
-    "last_inspection": "03-28-2023",
-    "license_type": "Cottage Food Manufacture",
-    "lat": 41.822863,
-    "lng": -71.3957288,
-    "violation_count": 0,
-    "risk_score": 0,
-    "google_category": "other"
-  },
-  {
-    "id": "257398",
-    "name": "BOUCHERS WOOD RIVER INN",
-    "address": "1139 MAIN STREET RICHMOND RI 02898",
-    "last_inspection": "03-22-2023",
-    "license_type": "Seats - 50 or More",
-    "lat": 41.5150527,
-    "lng": -71.7019388,
-    "violation_count": 0,
-    "risk_score": 0,
-    "cuisine": "american",
-    "google_category": "restaurant"
-  },
-  {
-    "id": "662957",
-    "name": "LIVIS BURRITO",
-    "address": "65 WEYBOSSET ST PROVIDENCE RI 02903",
-    "last_inspection": "03-22-2023",
-    "license_type": "Seats -  Less than 50",
-    "lat": 41.8239052,
-    "lng": -71.4105015,
-    "violation_count": 3,
-    "risk_score": 6,
-    "cuisine": "mexican",
-    "google_category": "restaurant"
-  },
-  {
-    "id": "865855",
-    "name": "JIMS MOBILE",
-    "address": "389 ELMWOOD AVENUE PROVIDENCE RI 02907",
-    "last_inspection": "03-22-2023",
-    "license_type": "Cash Registers - 1-2",
-    "lat": 41.8011172,
-    "lng": -71.4266896,
-    "violation_count": 2,
-    "risk_score": 2,
-    "google_category": "other"
-  },
-  {
-    "id": "865859",
-    "name": "BROWN DINING SERVICES",
-    "address": "144 THAYER STREET PROVIDENCE RI 02912",
-    "last_inspection": "03-22-2023",
-    "license_type": "Mobile Food Service",
-    "lat": 41.8251284,
-    "lng": -71.4008277,
-    "violation_count": 0,
-    "risk_score": 0,
-    "google_category": "other"
   },
   {
     "id": "937186",
