@@ -84782,5 +84782,43 @@
     "risk_score": 0,
     "google_category": "restaurant",
     "cuisine": "breakfast"
+  },
+  {
+    "id": "262367",
+    "name": "MCKINLEYS CONGRESS TAVERN",
+    "address": "62 ORANGE ST PROVIDENCE RI 02903",
+    "last_inspection": "04-06-2026",
+    "license_type": "Seats -  Less than 50",
+    "lat": 41.8231796,
+    "lng": -71.41006469999999,
+    "violation_count": 9,
+    "risk_score": 15,
+    "google_category": "restaurant",
+    "cuisine": "bar"
+  },
+  {
+    "id": "857106",
+    "name": "SLICE AND SCOOP",
+    "address": "665 DOUGLAS PK UNIT B SMITHFIELD RI 02917",
+    "last_inspection": "04-06-2026",
+    "license_type": "Seats -  Less than 50",
+    "lat": 41.9035771,
+    "lng": -71.5054463,
+    "violation_count": 8,
+    "risk_score": 10,
+    "google_category": "restaurant",
+    "cuisine": "pizza"
+  },
+  {
+    "id": "939465",
+    "name": "SAVORY CONCEPTS",
+    "address": "498 WASHINGTON ST COVENTRY RI 02816",
+    "last_inspection": "04-06-2026",
+    "license_type": "Cash Registers - 1-2",
+    "lat": 41.6949324,
+    "lng": -71.5397868,
+    "violation_count": 0,
+    "risk_score": 0,
+    "google_category": "other"
   }
 ]
