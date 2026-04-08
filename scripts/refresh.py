@@ -558,14 +558,20 @@ def full_rescan(locations):
         if insp_date:
             api_d    = parse_date(insp_date)
             stored_d = parse_date(loc.get("last_inspection", ""))
-            if api_d and stored_d and api_d > stored_d:
-                print(f"  Updated: {loc['name']} ({loc['last_inspection']} → {insp_date})")
-                loc["last_inspection"] = insp_date
+            date_newer  = api_d and stored_d and api_d > stored_d
+            score_stale = (count is not None and
+                           (loc.get("violation_count") != count or loc.get("risk_score") != score))
+            if date_newer or score_stale:
+                if date_newer:
+                    print(f"  Updated: {loc['name']} ({loc['last_inspection']} → {insp_date})")
+                    loc["last_inspection"] = insp_date
+                else:
+                    print(f"  Fixed scores: {loc['name']} (violations {loc.get('violation_count')}→{count}, risk {loc.get('risk_score')}→{score})")
                 if count is not None:
                     loc["violation_count"] = count
                     loc["risk_score"]      = score
                 updated += 1
-        time.sleep(0.5)
+        time.sleep(0.15)
 
         if i % 100 == 0 or i == len(locations):
             print(f"  {i}/{len(locations)} checked ({updated} updated) — saving checkpoint…")

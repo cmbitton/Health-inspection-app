@@ -1,4 +1,4 @@
-name: Weekly Reconcile
+name: Weekly Reconcile & Rescan
 
 on:
   schedule:
@@ -20,6 +20,11 @@ jobs:
         env:
           GOOGLE_MAPS_KEY: ${{ secrets.GOOGLE_MAPS_KEY }}
 
+      - name: Run full rescan
+        run: python3 scripts/refresh.py --rescan
+        env:
+          GOOGLE_MAPS_KEY: ${{ secrets.GOOGLE_MAPS_KEY }}
+
       - name: Commit updated data
         run: |
           git config user.name "github-actions[bot]"
@@ -29,7 +34,7 @@ jobs:
             echo "No changes — skipping deploy"
             echo "CHANGED=false" >> $GITHUB_ENV
           else
-            git commit -m "Weekly reconcile"
+            git commit -m "Weekly reconcile & rescan"
             git push
             echo "CHANGED=true" >> $GITHUB_ENV
           fi
