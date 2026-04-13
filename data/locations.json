@@ -14116,19 +14116,6 @@
     "google_category": "grocery"
   },
   {
-    "id": "251573",
-    "name": "NEWPORT CREAMERY STORE 1",
-    "address": "208 WEST MAIN ROAD MIDDLETOWN RI 02842",
-    "last_inspection": "12-16-2025",
-    "license_type": "Seats - 50 or More",
-    "lat": 41.5111978,
-    "lng": -71.302872,
-    "violation_count": 7,
-    "risk_score": 10,
-    "cuisine": "american",
-    "google_category": "restaurant"
-  },
-  {
     "id": "256549",
     "name": "AMERICAS CUP INN",
     "address": "6 MARY STREET NEWPORT RI 02840",
@@ -25857,19 +25844,6 @@
     "google_category": "grocery"
   },
   {
-    "id": "937650",
-    "name": "HELADO TAIYAKI",
-    "address": "102 DEAN ST PROVIDENCE RI 02903",
-    "last_inspection": "10-16-2025",
-    "license_type": "Seats -  Less than 50",
-    "lat": 41.8243052,
-    "lng": -71.4248449,
-    "violation_count": 9,
-    "risk_score": 10,
-    "cuisine": "breakfast",
-    "google_category": "restaurant"
-  },
-  {
     "id": "937767",
     "name": "WHAT'S UP CUPCAKE",
     "address": "691 MAIN STREET WARREN RI 02885",
@@ -30191,19 +30165,6 @@
     "google_category": "school"
   },
   {
-    "id": "251576",
-    "name": "NEWPORT CREAMERY STORE 4",
-    "address": "673 SMITH STREET PROVIDENCE RI 02908",
-    "last_inspection": "03-11-2026",
-    "license_type": "Seats - 50 or More",
-    "lat": 41.8378141,
-    "lng": -71.4334164,
-    "violation_count": 6,
-    "risk_score": 7,
-    "cuisine": "american",
-    "google_category": "restaurant"
-  },
-  {
     "id": "253799",
     "name": "BEST TASTE",
     "address": "1001 MINERAL SPRING AVENUE NORTH PROVIDENCE RI 02904",
@@ -32356,19 +32317,6 @@
     "risk_score": 0,
     "google_category": "restaurant",
     "cuisine": "breakfast"
-  },
-  {
-    "id": "244590",
-    "name": "SCANDINAVIAN HOME INC",
-    "address": "1811 BROAD STREET CRANSTON RI 02905",
-    "last_inspection": "09-11-2025",
-    "license_type": "Seats - 50 or More",
-    "lat": 41.7761565,
-    "lng": -71.4002312,
-    "violation_count": 1,
-    "risk_score": 1,
-    "google_category": "healthcare",
-    "cuisine": "other"
   },
   {
     "id": "248622",
@@ -43502,19 +43450,6 @@
     "google_category": "restaurant"
   },
   {
-    "id": "251581",
-    "name": "NEWPORT CREAMERY STORE 10",
-    "address": "781 TIOGUE AVENUE COVENTRY RI 02816",
-    "last_inspection": "07-09-2025",
-    "license_type": "Seats - 50 or More",
-    "lat": 41.682314,
-    "lng": -71.5633335,
-    "violation_count": 0,
-    "risk_score": 0,
-    "cuisine": "american",
-    "google_category": "restaurant"
-  },
-  {
     "id": "252521",
     "name": "ASIA GRILLE",
     "address": "LINCOLN MALL LINCOLN RI 02865",
@@ -49405,8 +49340,8 @@
     "license_type": "Mobile Food Service",
     "lat": 41.8809562,
     "lng": -71.389822,
-    "violation_count": 2,
-    "risk_score": 2,
+    "violation_count": 4,
+    "risk_score": 8,
     "google_category": "restaurant",
     "cuisine": "mexican"
   },
@@ -51312,19 +51247,6 @@
     "violation_count": 1,
     "risk_score": 1,
     "google_category": "other"
-  },
-  {
-    "id": "266107",
-    "name": "PROVIDENCE COAL FIRED PIZZA",
-    "address": "6105 POST RD NORTH KINGSTOWN RI 02852",
-    "last_inspection": "05-19-2025",
-    "license_type": "Seats - 50 or More",
-    "lat": 41.630279,
-    "lng": -71.4646056,
-    "violation_count": 0,
-    "risk_score": 0,
-    "cuisine": "pizza",
-    "google_category": "restaurant"
   },
   {
     "id": "413196",
@@ -59429,19 +59351,6 @@
     "cuisine": "other"
   },
   {
-    "id": "936999",
-    "name": "BLACKSTONE EG",
-    "address": "241 MAIN STREET EAST GREENWICH RI 02818",
-    "last_inspection": "03-27-2025",
-    "license_type": "Seats -  Less than 50",
-    "lat": 41.6605108,
-    "lng": -71.4501818,
-    "violation_count": 3,
-    "risk_score": 5,
-    "google_category": "restaurant",
-    "cuisine": "other"
-  },
-  {
     "id": "937403",
     "name": "HALF MOON EMPANADAS",
     "address": "2000 POST ROAD WARWICK RI 02886",
@@ -60579,12 +60488,12 @@
     "id": "265815",
     "name": "STRAW IN THE RAW",
     "address": "200 HILLSIDE RD CRANSTON RI 02920",
-    "last_inspection": "03-18-2025",
+    "last_inspection": "04-08-2026",
     "license_type": "Seats -  Less than 50",
     "lat": 41.7578953,
     "lng": -71.4576721,
-    "violation_count": 0,
-    "risk_score": 0,
+    "violation_count": 2,
+    "risk_score": 3,
     "google_category": "restaurant",
     "cuisine": "breakfast"
   },
@@ -64702,19 +64611,6 @@
     "risk_score": 5,
     "cuisine": "american",
     "google_category": "restaurant"
-  },
-  {
-    "id": "865874",
-    "name": "UNION STATION BREWERY",
-    "address": "36 EXCHANGE TERRACE PROVIDENCE RI 02903",
-    "last_inspection": "02-12-2025",
-    "license_type": "Caterer or Commissary",
-    "lat": 41.8255603,
-    "lng": -71.41403199999999,
-    "violation_count": 1,
-    "risk_score": 1,
-    "google_category": "restaurant",
-    "cuisine": "bar"
   },
   {
     "id": "865948",
@@ -82670,19 +82566,6 @@
     "google_category": "other"
   },
   {
-    "id": "612258",
-    "name": "LIVING WELL ADULT DAY CARE",
-    "address": "120 WEBSTER ST PAWTUCKET RI 02861",
-    "last_inspection": "09-14-2023",
-    "license_type": "Seats - 50 or More",
-    "lat": 41.8907748,
-    "lng": -71.3671433,
-    "violation_count": 0,
-    "risk_score": 0,
-    "google_category": "other",
-    "cuisine": "other"
-  },
-  {
     "id": "771245",
     "name": "ACHVA CATERING",
     "address": "450 ELMGROVE AVE PROVIDENCE RI 02906",
@@ -84102,18 +83985,6 @@
     "cuisine": "breakfast"
   },
   {
-    "id": "256345",
-    "name": "CRETCHEU GRUPO",
-    "address": "UNIT 3 PAWTUCKET RI 02860",
-    "last_inspection": "04-13-2023",
-    "license_type": "Food Service (Non-Profit)",
-    "lat": 41.8684902,
-    "lng": -71.38837509999999,
-    "violation_count": 3,
-    "risk_score": 5,
-    "google_category": "other"
-  },
-  {
     "id": "262422",
     "name": "NAMI JAPANESE RESTAURANT",
     "address": "198 ATWELLS AVE PROVIDENCE RI 02903",
@@ -84125,44 +83996,6 @@
     "risk_score": 10,
     "cuisine": "japanese",
     "google_category": "restaurant"
-  },
-  {
-    "id": "358358",
-    "name": "CONNECTING FOR CHILDREN AND FAMILIES",
-    "address": "37 CENTER ST WOONSOCKET RI 02895",
-    "last_inspection": "04-13-2023",
-    "license_type": "Food Service (Non-Profit)",
-    "lat": 42.0006075,
-    "lng": -71.52055659999999,
-    "violation_count": 1,
-    "risk_score": 1,
-    "google_category": "other"
-  },
-  {
-    "id": "857262",
-    "name": "DIEGOS BARRIO AND CANTINA",
-    "address": "116 AQUIDNECK AVE MIDDLETOWN RI 02842",
-    "last_inspection": "04-11-2023",
-    "license_type": "Mobile Food Service",
-    "lat": 41.4927157,
-    "lng": -71.2844631,
-    "violation_count": 0,
-    "risk_score": 0,
-    "google_category": "restaurant",
-    "cuisine": "mexican"
-  },
-  {
-    "id": "857418",
-    "name": "ONSHORE BREWING LLC",
-    "address": "80 WAMPANOAG LN TIVERTON RI 02878",
-    "last_inspection": "04-11-2023",
-    "license_type": "Mobile Food Service",
-    "lat": 41.6247113,
-    "lng": -71.1686168,
-    "violation_count": 1,
-    "risk_score": 1,
-    "google_category": "restaurant",
-    "cuisine": "breakfast"
   },
   {
     "id": "937186",
