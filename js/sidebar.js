@@ -174,40 +174,58 @@ function renderInspections(loc, data) {
         return;
     }
 
-    data.forEach(inspection => {
-        const date = (inspection.columns?.['0'] ?? '').replace('Inspection Date: ', '').trim();
-        const type = (inspection.columns?.['1'] ?? '').replace('Inspection Purpose: ', '').trim();
-        const violations = inspection.violations ? Object.values(inspection.violations).filter(v => v?.[0]) : [];
-        const hasViolations = violations.length > 0;
+    const SEV_RANK = { P: 0, Pf: 1, C: 2 };
 
-        html += `<div class="inspection-card">
+    data.forEach((inspection, idx) => {
+        const violations = [...(inspection.violations || [])].sort(
+            (a, b) => (SEV_RANK[a.severity] ?? 3) - (SEV_RANK[b.severity] ?? 3)
+        );
+        const hasViolations = violations.length > 0;
+        const collapsed = idx > 0;  // only the most recent is expanded by default
+
+        html += `<div class="inspection-card${collapsed ? ' collapsed' : ''}">
             <div class="card-top">
-                <span class="card-date">${escHtml(date)}</span>
+                <span class="card-date">${escHtml(inspection.date)}</span>
                 <span class="badge ${hasViolations ? 'badge-violations' : 'badge-clean'}">
                     ${hasViolations ? `${violations.length} Violation${violations.length !== 1 ? 's' : ''}` : 'Clean'}
                 </span>
+                <span class="card-chevron" aria-hidden="true">▾</span>
             </div>
-            <div class="card-type">${escHtml(type)}</div>`;
+            <div class="card-type">${escHtml(inspection.type)}</div>
+            <div class="card-body">`;
 
         if (hasViolations) {
             violations.forEach(v => {
-                html += `<div class="violation">${escHtml(v[0])}</div>`;
+                const sev = (v.severity || 'C').toLowerCase();
+                html += `<div class="violation sev-${sev}">
+                    <span class="violation-code">${escHtml(v.code)}</span>
+                    <span class="violation-text">${escHtml(v.text)}</span>
+                </div>`;
             });
+            html += `<div class="violation-legend">
+                <span class="legend-sev sev-p">Priority</span>
+                <span class="legend-sev sev-pf">Priority Foundation</span>
+                <span class="legend-sev sev-c">Core</span>
+            </div>`;
         } else {
             html += `<div class="no-violations">✓ No violations reported</div>`;
         }
 
-        if (inspection.printablePath) {
-            const reportUrl = `https://ri.healthinspections.us/${inspection.printablePath.replace('../', '')}`;
-            html += `<a class="report-link" href="${escHtml(reportUrl)}" target="_blank" rel="noopener">
+        if (inspection.reportUrl) {
+            html += `<a class="report-link" href="${escHtml(inspection.reportUrl)}" target="_blank" rel="noopener">
                 View Official Report →
             </a>`;
         }
 
-        html += `</div>`;
+        html += `</div></div>`;
     });
 
     sidebarBody.innerHTML = html;
+
+    sidebarBody.querySelectorAll('.inspection-card').forEach(card => {
+        const header = card.querySelector('.card-top');
+        header.addEventListener('click', () => card.classList.toggle('collapsed'));
+    });
 
     document.getElementById('back-btn')?.addEventListener('click', currentListFn);
 }

@@ -547,10 +547,25 @@ header p {
 .card-top {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     gap: 8px;
     margin-bottom: 6px;
+    cursor: pointer;
+    user-select: none;
 }
+
+.card-top:hover .card-date { color: #0f172a; }
+
+.card-chevron {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    transition: transform 0.15s ease;
+    margin-left: auto;
+}
+
+.inspection-card.collapsed .card-chevron { transform: rotate(-90deg); }
+.inspection-card.collapsed .card-type    { margin-bottom: 0; }
+.inspection-card.collapsed .card-body    { display: none; }
 
 .card-date {
     font-weight: 600;
@@ -585,14 +600,76 @@ header p {
 
 .violation {
     font-size: 0.8rem;
-    color: #dc2626;
     padding: 6px 10px;
-    background: #fff5f5;
-    border-left: 3px solid #fca5a5;
+    border-left: 3px solid;
     border-radius: 0 5px 5px 0;
     margin: 4px 0;
     line-height: 1.4;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px;
 }
+
+.violation-code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.violation-text { flex: 1; min-width: 0; }
+
+.violation.sev-p {
+    background: #fef2f2;
+    border-left-color: #ef4444;
+    color: #7f1d1d;
+}
+.violation.sev-p .violation-code {
+    background: #ef4444;
+    color: #fff;
+}
+
+.violation.sev-pf {
+    background: #fff7ed;
+    border-left-color: #f97316;
+    color: #7c2d12;
+}
+.violation.sev-pf .violation-code {
+    background: #f97316;
+    color: #fff;
+}
+
+.violation.sev-c {
+    background: #f0fdf4;
+    border-left-color: #22c55e;
+    color: #14532d;
+}
+.violation.sev-c .violation-code {
+    background: #22c55e;
+    color: #fff;
+}
+
+.violation-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+    font-size: 0.68rem;
+}
+
+.legend-sev {
+    padding: 1px 8px;
+    border-radius: 99px;
+    font-weight: 600;
+    color: #fff;
+}
+.legend-sev.sev-p  { background: #ef4444; }
+.legend-sev.sev-pf { background: #f97316; }
+.legend-sev.sev-c  { background: #22c55e; }
 
 .no-violations {
     font-size: 0.8rem;

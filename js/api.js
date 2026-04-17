@@ -1,5 +1,3 @@
-const PROXY_BASE = '/api-proxy';
-
 async function fetchInspectionData(loc) {
     const sidebarBody = document.getElementById('sidebar-body');
     sidebarBody.innerHTML = `
@@ -8,18 +6,19 @@ async function fetchInspectionData(loc) {
             <span>Loading inspection records…</span>
         </div>`;
 
-    const encodedId = btoa(String(loc.id));
-    const url = `${PROXY_BASE}/inspectionsData/${encodedId}`;
-
     try {
-        const res = await fetch(url, { headers: { accept: 'application/json' } });
+        const res = await fetch(`data/inspections/${loc.id}.json`);
+        if (res.status === 404) {
+            renderInspections(loc, []);
+            return;
+        }
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         renderInspections(loc, data);
     } catch (err) {
         sidebarBody.innerHTML = `
             <div class="error-msg">
-                Could not load inspection data. The state server may be blocking cross-origin requests (CORS).
+                Could not load inspection data.
             </div>`;
     }
 }

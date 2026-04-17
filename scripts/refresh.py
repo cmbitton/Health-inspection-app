@@ -16,6 +16,7 @@ Usage:
 """
 
 import base64
+import html as htmllib
 import json
 import os
 import re
@@ -24,12 +25,15 @@ import time
 import urllib.parse
 import urllib.request
 import urllib.error
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 from place_types import CATEGORY_TYPE_MAP, CUISINE_TYPE_MAP  # noqa: E402
 
-DATA_FILE   = Path(__file__).parent.parent / "data" / "locations.json"
+DATA_FILE       = Path(__file__).parent.parent / "data" / "locations.json"
+INSPECTIONS_DIR = Path(__file__).parent.parent / "data" / "inspections"
+HTML_CACHE_DIR  = Path(__file__).parent.parent / ".cache" / "html"
 INSPECTIONS = "https://ri.healthinspections.us/ri/API/index.cfm/inspectionsData/{}"
 SEARCH_URL  = "https://ri.healthinspections.us/ri/API/index.cfm/search/{}/{}"
 GEOCODE_URL = "https://maps.googleapis.com/maps/api/geocode/json?address={}&key={}"
@@ -214,32 +218,85 @@ def violation_weight(violation_str):
     except (ValueError, IndexError):
         return 1
 
+def code_severity(code):
+    """Return 'P'/'Pf'/'C' for a FDA code. Falls back to base code if subsection not found."""
+    sev = CODE_SEVERITY.get(code)
+    if sev is None:
+        base = re.sub(r'\([A-Z0-9]+\)$', '', code)
+        sev = CODE_SEVERITY.get(base)
+    return sev or "C"
+
 def code_weight(code):
-    severity = CODE_SEVERITY.get(code)
-    if severity is None:
-        # Fall back to base code (strip subsection letter e.g. "(A)")
-        base = re.sub(r'\([A-Z]\)$', '', code)
-        severity = CODE_SEVERITY.get(base)
-    if severity == "P":  return 3
-    if severity == "Pf": return 2
+    sev = code_severity(code)
+    if sev == "P":  return 3
+    if sev == "Pf": return 2
     return 1
+
+def _printable_url(printable_path):
+    clean = re.sub(r'^\.\.?/', '', printable_path)
+    safe = ''.join(c if c in 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&\'()*+,;=%' else urllib.parse.quote(c)
+                   for c in clean)
+    return HTML_BASE + safe
+
+def _insp_id_from_path(printable_path):
+    m = re.search(r'inspID=(\d+)', printable_path)
+    return m.group(1) if m else None
+
+def fetch_inspection_html(printable_path):
+    """Fetch inspection report HTML, with on-disk cache keyed by inspID."""
+    insp_id = _insp_id_from_path(printable_path)
+    cache_file = HTML_CACHE_DIR / f"{insp_id}.html" if insp_id else None
+    if cache_file and cache_file.exists():
+        return cache_file.read_text(encoding="utf-8", errors="replace")
+    url = _printable_url(printable_path)
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0", "Referer": HTML_BASE})
+    with urllib.request.urlopen(req, timeout=15) as resp:
+        html = resp.read().decode("utf-8", errors="replace")
+    if cache_file:
+        HTML_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+        cache_file.write_text(html, encoding="utf-8")
+    return html
 
 def fetch_report_codes(printable_path):
     """Fetch the HTML inspection report and return all FDA code sections cited."""
-    clean = re.sub(r'^\.\.?/', '', printable_path)
-    # Percent-encode characters that are invalid in URLs (spaces, quotes, backslashes, etc.)
-    # but leave the path structure and existing percent-encoding intact
-    safe = ''.join(c if c in 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&\'()*+,;=%' else urllib.parse.quote(c)
-                   for c in clean)
-    url = HTML_BASE + safe
-    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0", "Referer": HTML_BASE})
     try:
-        with urllib.request.urlopen(req, timeout=15) as resp:
-            html = resp.read().decode("utf-8", errors="replace")
-        return re.findall(r"Violation of Code:.*?([\d]+-[\d]+\.[\d]+(?:\([A-Z]\))?)", html)
+        html = fetch_inspection_html(printable_path)
     except Exception as e:
         print(f"    Warning: Could not fetch HTML report: {e}")
         return []
+    return re.findall(r"Violation of Code:.*?([\d]+-[\d]+\.[\d]+(?:\([A-Z]\))?)", html)
+
+# Matches one violation row: item number cell, then the Violation of Code cell with <span>code</span> text.
+_VIOLATION_ROW_RE = re.compile(
+    r'<td class="ten[^"]*"[^>]*>\s*(\d+)\s*</td>\s*'
+    r'<td class="ten"[^>]*>\s*Violation of Code:\s*'
+    r'<span[^>]*>([^<]+)</span>\s*'
+    r'(.*?)(?=</td>)',
+    re.DOTALL,
+)
+_CODE_RE = re.compile(r'\d+-\d+\.\d+(?:\([A-Z0-9]+\))?')
+
+def _clean_text(raw):
+    t = re.sub(r'<[^>]+>', '', raw)
+    t = htmllib.unescape(t)
+    return re.sub(r'\s+', ' ', t).strip()
+
+def parse_inspection_violations(html):
+    """Parse the printable HTML report into a list of structured violation dicts."""
+    out = []
+    for item, codes_raw, text_raw in _VIOLATION_ROW_RE.findall(html):
+        codes = _CODE_RE.findall(codes_raw)
+        if not codes:
+            continue
+        # If a row lists multiple codes, pick the highest severity one for display.
+        primary = max(codes, key=code_weight)
+        out.append({
+            "item":     int(item),
+            "code":     primary,
+            "severity": code_severity(primary),
+            "text":     _clean_text(text_raw),
+        })
+    return out
 
 def score_inspection(violations_dict, code_sections=None):
     if code_sections:
@@ -536,7 +593,101 @@ def reconcile(locations, by_id, dry_run=False):
     print(f"Phase 4 done: {verb} {len(removed)} delisted location(s).\n")
 
 
-# ── Phase 5: Full rescan ──────────────────────────────────────────────────────
+# ── Phase 5: Per-location inspection files ───────────────────────────────────
+
+def _build_inspection_record(insp):
+    """Turn one inspection from the API JSON into our structured record (with HTML-parsed violations)."""
+    raw_date  = insp.get("columns", {}).get("0", "")
+    date      = raw_date.replace("Inspection Date:", "").strip()
+    raw_type  = insp.get("columns", {}).get("1", "")
+    itype     = raw_type.replace("Inspection Purpose:", "").strip()
+    seats     = insp.get("columns", {}).get("2", "").strip()
+    pp        = insp.get("printablePath", "")
+
+    violations = []
+    report_url = None
+    if pp:
+        report_url = _printable_url(pp)
+        try:
+            html = fetch_inspection_html(pp)
+            violations = parse_inspection_violations(html)
+        except Exception as e:
+            print(f"    Warning: HTML fetch failed for inspID={_insp_id_from_path(pp)}: {e}")
+
+    return {
+        "date":       date,
+        "type":       itype,
+        "seats":      seats,
+        "reportUrl":  report_url,
+        "violations": violations,
+    }
+
+def build_inspection_file(facility_id):
+    """Fetch full inspection history for a facility and return the list to write to disk."""
+    url = INSPECTIONS.format(encode_id(facility_id))
+    data = fetch_json(url)
+    return [_build_inspection_record(insp) for insp in (data or [])]
+
+def _inspection_file_is_current(fac_id, latest_date):
+    """Return True if the on-disk file is up to date (most recent inspection date matches)."""
+    path = INSPECTIONS_DIR / f"{fac_id}.json"
+    if not path.exists():
+        return False
+    try:
+        stored = json.loads(path.read_text())
+    except Exception:
+        return False
+    if not stored:
+        return False
+    return stored[0].get("date") == latest_date
+
+def backfill_inspections(locations, max_workers=6):
+    """Write per-location inspection files to data/inspections/{id}.json.
+
+    Skips locations whose stored file's most recent inspection date matches
+    locations.json's last_inspection — so daily runs are near-instant.
+    """
+    INSPECTIONS_DIR.mkdir(parents=True, exist_ok=True)
+
+    todo = [loc for loc in locations
+            if not _inspection_file_is_current(loc["id"], loc.get("last_inspection"))]
+    if not todo:
+        print("─── Phase 5: All inspection files current ───\n")
+        return
+
+    print(f"─── Phase 5: Building inspection files for {len(todo)}/{len(locations)} locations "
+          f"({max_workers} workers) ───")
+
+    done = 0
+    failed = 0
+
+    def work(loc):
+        for attempt in range(2):
+            try:
+                records = build_inspection_file(loc["id"])
+                (INSPECTIONS_DIR / f"{loc['id']}.json").write_text(json.dumps(records))
+                return loc, None
+            except Exception as e:
+                if attempt == 0:
+                    time.sleep(2)
+                    continue
+                return loc, e
+
+    with ThreadPoolExecutor(max_workers=max_workers) as ex:
+        futures = [ex.submit(work, loc) for loc in todo]
+        for fut in as_completed(futures):
+            loc, err = fut.result()
+            done += 1
+            if err:
+                failed += 1
+                print(f"  FAILED {loc['id']} {loc['name']}: {err}")
+            if done % 50 == 0 or done == len(todo):
+                print(f"  {done}/{len(todo)} ({failed} failed)")
+
+    print(f"Phase 5 done: wrote {done - failed} files, {failed} failed.\n")
+
+
+# ── Phase 6: Full rescan ──────────────────────────────────────────────────────
 
 def full_rescan(locations):
     """Check inspectionsData for every facility and update if the API has a newer date.
@@ -598,6 +749,7 @@ def main():
         full_rescan(locations)
     if reconcile_mode:
         reconcile(locations, by_id, dry_run=dry_run)
+    backfill_inspections(locations)
 
     DATA_FILE.write_text(json.dumps(locations, indent=2))
     print(f"Saved {len(locations)} locations to {DATA_FILE}")
