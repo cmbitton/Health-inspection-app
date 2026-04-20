@@ -327,8 +327,8 @@
     "license_type": "Caterer or Commissary",
     "lat": 41.8070965,
     "lng": -71.456441,
-    "violation_count": 9,
-    "risk_score": 11,
+    "violation_count": 12,
+    "risk_score": 18,
     "google_category": "restaurant",
     "cuisine": "mexican"
   },
@@ -9706,19 +9706,6 @@
     "cuisine": "bar"
   },
   {
-    "id": "939008",
-    "name": "LIN'S HIBACHI BUFFET",
-    "address": "401 CLINTON STREET WOONSOCKET RI 02895",
-    "last_inspection": "01-16-2026",
-    "license_type": "Seats - 50 or More",
-    "lat": 42.0060793,
-    "lng": -71.5066451,
-    "violation_count": 1,
-    "risk_score": 1,
-    "google_category": "restaurant",
-    "cuisine": "other"
-  },
-  {
     "id": "939171",
     "name": "MEMERES",
     "address": "122 FOUNTAIN ST PROVIDENCE RI 02903",
@@ -11371,19 +11358,6 @@
     "cuisine": "other"
   },
   {
-    "id": "937144",
-    "name": "DOS MUNDOS RESTAURANT",
-    "address": "1 STARLINE WAY CRANSTON RI 02921",
-    "last_inspection": "01-08-2026",
-    "license_type": "Seats - 50 or More",
-    "lat": 41.789995,
-    "lng": -71.5271703,
-    "violation_count": 5,
-    "risk_score": 7,
-    "google_category": "restaurant",
-    "cuisine": "other"
-  },
-  {
     "id": "937857",
     "name": "AQUIDNECK ATHLETIC ADVANCEMENT CENTER",
     "address": "200 HIGH POINT AVENUE PORTSMOUTH RI 02871",
@@ -11865,19 +11839,6 @@
     "risk_score": 2,
     "cuisine": "breakfast",
     "google_category": "restaurant"
-  },
-  {
-    "id": "260025",
-    "name": "WARREN SKILLED NURSING AND REHABILITATION",
-    "address": "642 METACOM AVENUE WARREN RI 02885",
-    "last_inspection": "01-06-2026",
-    "license_type": "Seats - 50 or More",
-    "lat": 41.715982,
-    "lng": -71.2668262,
-    "violation_count": 3,
-    "risk_score": 3,
-    "google_category": "healthcare",
-    "cuisine": "other"
   },
   {
     "id": "260878",
@@ -25760,7 +25721,7 @@
     "id": "714214",
     "name": "DABREN JERSEYS",
     "address": "45 TOMAQUAG RD BRADFORD RI 02808",
-    "last_inspection": "10-16-2025",
+    "last_inspection": "04-09-2026",
     "license_type": "Milk Producer",
     "lat": 41.418265,
     "lng": -71.7550739,
@@ -26565,7 +26526,7 @@
     "id": "250069",
     "name": "SAKONNET OYSTER COMPANY INC",
     "address": "63 JONH DYER ROAD LITTLE COMPTON RI 02837",
-    "last_inspection": "10-10-2025",
+    "last_inspection": "04-17-2026",
     "license_type": "Shipper",
     "lat": 41.5466625,
     "lng": -71.13478289999999,
@@ -26577,7 +26538,7 @@
     "id": "358452",
     "name": "WRIGHTS DAIRY FARM INC",
     "address": "200 WOONSOCKET HILL ROAD NORTH SMITHFIELD RI 02896",
-    "last_inspection": "10-10-2025",
+    "last_inspection": "04-09-2026",
     "license_type": "Milk Producer",
     "lat": 41.9830863,
     "lng": -71.5387404,
@@ -26639,7 +26600,7 @@
     "id": "237601",
     "name": "ESCOBAR HIGHLAND FARM",
     "address": "133 MIDDLE ROAD PORTSMOUTH RI 02871",
-    "last_inspection": "10-09-2025",
+    "last_inspection": "04-10-2026",
     "license_type": "Milk Producer",
     "lat": 41.5872762,
     "lng": -71.2551691,
@@ -35627,19 +35588,6 @@
     "google_category": "restaurant"
   },
   {
-    "id": "771498",
-    "name": "GANSETT NUTRITION OF MARINER SQUARE",
-    "address": "190 PT JUDITH RD UNIT #39 NARRAGANSETT RI 02882",
-    "last_inspection": "08-26-2025",
-    "license_type": "Seats -  Less than 50",
-    "lat": 41.424499,
-    "lng": -71.480509,
-    "violation_count": 0,
-    "risk_score": 0,
-    "google_category": "restaurant",
-    "cuisine": "breakfast"
-  },
-  {
     "id": "856716",
     "name": "NANAS BAKERY AND PIZZA",
     "address": "82 HIGH ST GRD FLR NANAS WESTERLY RI 02891",
@@ -43666,19 +43614,6 @@
     "cuisine": "other"
   },
   {
-    "id": "251582",
-    "name": "NEWPORT CREAMERY STORE 12",
-    "address": "568 PUTNAM PIKE SMITHFIELD RI 02828",
-    "last_inspection": "07-07-2025",
-    "license_type": "Seats - 50 or More",
-    "lat": 41.8707096,
-    "lng": -71.5509967,
-    "violation_count": 4,
-    "risk_score": 4,
-    "cuisine": "american",
-    "google_category": "restaurant"
-  },
-  {
     "id": "251685",
     "name": "BARNES AND NOBLE BOOKSELLERS INC",
     "address": "THE CROSSING AT SMITHFIELD SMITHFIELD RI 02917",
@@ -48080,19 +48015,6 @@
     "violation_count": 9,
     "risk_score": 11,
     "cuisine": "chinese",
-    "google_category": "restaurant"
-  },
-  {
-    "id": "413371",
-    "name": "PERSEPHONES KITCHEN LLC",
-    "address": "235 DODGE ST BLOCK ISLAND RI 02807",
-    "last_inspection": "06-05-2025",
-    "license_type": "Seats -  Less than 50",
-    "lat": 41.1739904,
-    "lng": -71.5608087,
-    "violation_count": 3,
-    "risk_score": 5,
-    "cuisine": "breakfast",
     "google_category": "restaurant"
   },
   {
@@ -74330,12 +74252,12 @@
     "id": "265865",
     "name": "CARINA E DOLCE SPECIALTY CAKES AND COOKIES",
     "address": "1402 PLAINFIELD PK CRANSTON RI 02920",
-    "last_inspection": "08-29-2024",
+    "last_inspection": "04-08-2026",
     "license_type": "Food Processor Retail - In-State",
     "lat": 41.7957353,
     "lng": -71.4829561,
-    "violation_count": 1,
-    "risk_score": 2,
+    "violation_count": 0,
+    "risk_score": 0,
     "google_category": "restaurant",
     "cuisine": "breakfast"
   },
@@ -78851,12 +78773,12 @@
     "id": "255438",
     "name": "ZOOMA BAR RISTORANTE",
     "address": "245 ATWELLS AVE PROVIDENCE RI 02903",
-    "last_inspection": "04-08-2026",
+    "last_inspection": "04-15-2026",
     "license_type": "Seats - 50 or More",
     "lat": 41.8238058,
     "lng": -71.4261502,
-    "violation_count": 17,
-    "risk_score": 28,
+    "violation_count": 5,
+    "risk_score": 8,
     "cuisine": "italian",
     "google_category": "restaurant"
   },
@@ -81841,12 +81763,12 @@
     "id": "771349",
     "name": "110 GRILL",
     "address": "100 SABIN ST PROVIDENCE RI 02903",
-    "last_inspection": "11-28-2023",
+    "last_inspection": "04-15-2026",
     "license_type": "Seats - 50 or More",
     "lat": 41.8236724,
     "lng": -71.4165113,
-    "violation_count": 7,
-    "risk_score": 11,
+    "violation_count": 20,
+    "risk_score": 33,
     "cuisine": "american",
     "google_category": "restaurant"
   },
@@ -82052,12 +81974,12 @@
     "id": "866560",
     "name": "RIANN BAKES",
     "address": "40 SOUTH MAIN ST WOONSOCKET RI 02895",
-    "last_inspection": "11-08-2023",
+    "last_inspection": "04-03-2026",
     "license_type": "Food Processor Retail - In-State",
     "lat": 41.9993439,
     "lng": -71.5161759,
-    "violation_count": 0,
-    "risk_score": 0,
+    "violation_count": 1,
+    "risk_score": 2,
     "google_category": "other"
   },
   {
@@ -83922,19 +83844,6 @@
     "google_category": "restaurant"
   },
   {
-    "id": "260023",
-    "name": "RESPIRATORY AND REHABILITATION CENTER OF RHODE ISLAND",
-    "address": "10 WOODLAND DRIVE COVENTRY RI 02816",
-    "last_inspection": "04-23-2023",
-    "license_type": "Seats -  Less than 50",
-    "lat": 41.6721829,
-    "lng": -71.5941826,
-    "violation_count": 0,
-    "risk_score": 0,
-    "google_category": "healthcare",
-    "cuisine": "other"
-  },
-  {
     "id": "865900",
     "name": "WAKIN UP WAGGIN",
     "address": "232 RIVER ROAD PAWCATUCK CT 06379",
@@ -83958,31 +83867,6 @@
     "violation_count": 0,
     "risk_score": 0,
     "google_category": "other"
-  },
-  {
-    "id": "239080",
-    "name": "GILBERT STUART ELEMENTARY SCHOOL",
-    "address": "188 PRINCETON AVENUE PROVIDENCE RI 02907",
-    "last_inspection": "04-20-2023",
-    "license_type": "Food Service (Non-Profit)",
-    "lat": 41.80484209999999,
-    "lng": -71.42665339999999,
-    "violation_count": 1,
-    "risk_score": 3,
-    "google_category": "school"
-  },
-  {
-    "id": "865881",
-    "name": "ANGKOR BOBA TEA HOUSE",
-    "address": "55 RUGBY STREET CRANSTON RI 02910",
-    "last_inspection": "04-19-2023",
-    "license_type": "Mobile Food Service",
-    "lat": 41.7788146,
-    "lng": -71.4404253,
-    "violation_count": 2,
-    "risk_score": 3,
-    "google_category": "restaurant",
-    "cuisine": "breakfast"
   },
   {
     "id": "262422",
